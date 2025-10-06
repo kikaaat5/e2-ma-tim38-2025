@@ -1,0 +1,94 @@
+package com.example.mobileapplication.ui;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.mobileapplication.R;
+import com.example.mobileapplication.data.TaskEntity;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+public class DayTaskAdapter extends RecyclerView.Adapter<DayTaskAdapter.VH> {
+
+    public interface OnItemClick { void onClick(TaskEntity item); }
+    public interface OnRowAction { void onAction(TaskEntity item, String action); }
+
+    private final List<TaskEntity> items = new ArrayList<>();
+    @Nullable private final OnItemClick onItemClick;
+    @Nullable private final OnRowAction actions;
+
+    // Jedan “glavni” konstruktor – oba callbacka su opciona (mogu biti null)
+    public DayTaskAdapter(@Nullable List<TaskEntity> start,
+                          @Nullable OnItemClick onItemClick,
+                          @Nullable OnRowAction actions) {
+        if (start != null) items.addAll(start);
+        this.onItemClick = onItemClick;
+        this.actions = actions;
+    }
+
+    public DayTaskAdapter(OnItemClick onItemClick, OnRowAction actions) {
+        this.onItemClick = onItemClick;
+        this.actions = actions;
+    }
+
+
+    // Pogodan pomoćni konstruktor kad želiš samo klik na red
+    public DayTaskAdapter(@Nullable OnItemClick onItemClick) {
+        this(null, onItemClick, null);
+    }
+
+    public void submit(@Nullable List<TaskEntity> list){
+        items.clear();
+        if (list != null) items.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    @NonNull @Override public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_day_task, parent, false);
+        return new VH(v);
+    }
+
+    @Override public void onBindViewHolder(@NonNull VH h, int pos) {
+        TaskEntity it = items.get(pos);
+        h.tvTitle.setText(it.title);
+        // prilagodi polje imenu iz TaskEntity (npr. scheduledAt)
+        h.tvTime.setText(formatTs(it.scheduledAt));
+
+        h.itemView.setOnClickListener(v -> { if (onItemClick != null) onItemClick.onClick(it); });
+
+        // Ako u item_day_task.xml imaš dugmad (npr. btnDone/btnPause/btnCancel), ovdje pozovi actions:
+        // if (actions != null) {
+        //   h.btnDone.setOnClickListener(v -> actions.onAction(it, "DONE"));
+        //   h.btnPause.setOnClickListener(v -> actions.onAction(it, "PAUSED"));
+        //   h.btnCancel.setOnClickListener(v -> actions.onAction(it, "CANCELED"));
+        // }
+    }
+
+    @Override public int getItemCount() { return items.size(); }
+
+    static class VH extends RecyclerView.ViewHolder {
+        final TextView tvTitle, tvTime;
+        // ako dodaš dugmad, deklariraj ih ovdje (npr. MaterialButton btnDone, btnPause, btnCancel)
+        VH(@NonNull View v){
+            super(v);
+            tvTitle = v.findViewById(R.id.tvTitle);
+            tvTime  = v.findViewById(R.id.tvTime);
+            // btnDone = v.findViewById(R.id.btnDone); ...
+        }
+    }
+
+    static String formatTs(Long epochMs) {
+        if (epochMs == null) return "";
+        return new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+                .format(new Date(epochMs));
+    }
+}
