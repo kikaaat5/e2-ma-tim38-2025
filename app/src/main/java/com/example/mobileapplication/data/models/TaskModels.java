@@ -1,4 +1,4 @@
-package com.example.mobileapplication.domain;
+package com.example.mobileapplication.data.models;
 
 public final class TaskModels {
 

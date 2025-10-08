@@ -1,5 +1,7 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.dagger.hilt.android'
+    id 'com.google.gms.google-services'
     alias(libs.plugins.kotlin.android)
 }
 
@@ -38,12 +40,23 @@ dependencies {
     implementation "com.prolificinteractive:material-calendarview:1.4.3"
 
 
-    // Room (OBAVEZNO)
+    // Room
     implementation 'androidx.room:room-runtime:2.6.1'
+    implementation libs.room.runtime
     //implementation libs.core.ktx
     annotationProcessor 'androidx.room:room-compiler:2.6.1'
+
+    //Firebase
+    implementation platform('com.google.firebase:firebase-bom:33.4.0')
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
 
     // Lifecycle (ViewModel/Livedata)
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.8.6'
     implementation 'androidx.lifecycle:lifecycle-livedata:2.8.6'
+    annotationProcessor libs.room.compiler
+
+    //Hilt
+    implementation "com.google.dagger:hilt-android:2.51.1"
+    annotationProcessor "com.google.dagger:hilt-compiler:2.51.1"
 }

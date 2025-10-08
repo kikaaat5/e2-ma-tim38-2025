@@ -3,20 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
     <application
+        android:name=".MobileApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileApplication" >
 
-        <!-- Pokrećemo CreateTaskActivity kao LAUNCHER -->
-        <activity android:name=".ui.CreateTaskActivity" android:exported="false" />
-        <activity android:name=".ui.TaskDetailActivity"/>
-        <activity android:name=".ui.CalendarActivity"/>
-        <activity android:name=".ui.TaskListActivity"
-            android:exported="true">
+        <activity android:name=".ui.tasks.CreateTaskActivity" android:exported="false" />
+        <activity android:name=".ui.tasks.TaskDetailActivity"/>
+        <activity android:name=".ui.tasks.CalendarActivity"/>
+        <activity android:name=".ui.tasks.TaskListActivity" android:exported="true"/>
+        <activity android:name=".ui.auth.LoginActivity" android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 

@@ -1,4 +1,4 @@
-package com.example.mobileapplication.ui;
+package com.example.mobileapplication.ui.viewModel;
 
 import android.app.Application;
 
@@ -8,8 +8,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
 import com.example.mobileapplication.data.AppDatabase;
-import com.example.mobileapplication.data.TaskDao;
-import com.example.mobileapplication.data.TaskEntity;
+import com.example.mobileapplication.data.dao.TaskDao;
+import com.example.mobileapplication.data.models.TaskEntity;
 
 import java.util.ArrayList;
 import java.util.Calendar;

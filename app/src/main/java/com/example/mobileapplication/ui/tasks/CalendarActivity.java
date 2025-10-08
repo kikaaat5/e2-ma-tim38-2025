@@ -1,4 +1,4 @@
-package com.example.mobileapplication.ui;
+package com.example.mobileapplication.ui.tasks;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,13 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mobileapplication.data.AppDatabase;
-import com.example.mobileapplication.data.CategoryEntity;
-import com.example.mobileapplication.data.TaskDao;
-import com.example.mobileapplication.data.TaskEntity;
+import com.example.mobileapplication.data.models.CategoryEntity;
+import com.example.mobileapplication.data.dao.TaskDao;
+import com.example.mobileapplication.data.models.TaskEntity;
 import com.example.mobileapplication.databinding.ActivityCalendarBinding;
-import com.example.mobileapplication.domain.TaskModels;
+import com.example.mobileapplication.ui.tasks.helpers.EventDecorater;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -10,6 +10,8 @@ constraintlayout = "2.1.4"
 kotlin = "2.2.0"
 coreKtx = "1.17.0"
 mcal = "2.0.1"
+roomRuntime = "2.8.1"
+roomCompiler = "2.8.1"
 
 
 [libraries]
@@ -22,6 +24,8 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 materialcalendarview = { module = "com.prolificinteractive:material-calendarview", version.ref = "mcal" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

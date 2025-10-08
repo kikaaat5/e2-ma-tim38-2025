@@ -1,8 +1,11 @@
-package com.example.mobileapplication.data;
+package com.example.mobileapplication.data.repository;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.mobileapplication.domain.TaskModels;
+import com.example.mobileapplication.data.models.TaskEntity;
+import com.example.mobileapplication.data.dao.CategoryDao;
+import com.example.mobileapplication.data.dao.TaskDao;
+import com.example.mobileapplication.data.models.TaskModels;
 
 import java.util.List;
 

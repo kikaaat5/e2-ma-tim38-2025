@@ -1,7 +1,6 @@
-package com.example.mobileapplication.ui;
+package com.example.mobileapplication.ui.tasks.helpers;
 
 import android.graphics.Color;
-import android.text.style.ForegroundColorSpan;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;

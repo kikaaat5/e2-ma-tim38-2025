@@ -1,4 +1,4 @@
-package com.example.mobileapplication.ui;
+package com.example.mobileapplication.ui.viewModel;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -6,16 +6,17 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileapplication.data.AppDatabase;
-import com.example.mobileapplication.data.TaskEntity;
-import com.example.mobileapplication.data.TaskRepository;
-import com.example.mobileapplication.domain.CreateTask;
-import com.example.mobileapplication.domain.CreateTaskImpl;
-import com.example.mobileapplication.domain.TaskModels;
+import com.example.mobileapplication.data.models.TaskEntity;
+import com.example.mobileapplication.data.repository.TaskRepository;
+import com.example.mobileapplication.domain.services.ITaskService;
+import com.example.mobileapplication.domain.serviceImpl.TaskServiceImpl;
+import com.example.mobileapplication.data.models.TaskModels;
 
 public class CreateTaskViewModel extends ViewModel {
-    private final CreateTask createTask;
+    private final ITaskService createTask;
     private final AppDatabase db;
-    public CreateTaskViewModel(CreateTask createTask, @NonNull Application app){ this.createTask = createTask;
+    public CreateTaskViewModel(ITaskService createTask, @NonNull Application app){
+        this.createTask = createTask;
         db = AppDatabase.get(app);}
 
     public long save(TaskModels.TaskDraft d){ return createTask.handle(d); }
@@ -113,7 +114,7 @@ public class CreateTaskViewModel extends ViewModel {
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass){
             AppDatabase db = AppDatabase.get(app.getApplicationContext());
             TaskRepository repo = new TaskRepository(db.taskDao(), db.categoryDao());
-            CreateTask uc = new CreateTaskImpl(repo);
+            ITaskService uc = new TaskServiceImpl(repo);
             return (T) new CreateTaskViewModel(uc, app);
         }
     }
