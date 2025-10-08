@@ -49,25 +49,26 @@ public class TaskDetailActivity extends AppCompatActivity {
         taskId = getIntent().getLongExtra(EXTRA_ID, -1);
         if (taskId <= 0) { finish(); return; }
 
-        // 1) Posmatraj task
+
         dao.byId(taskId).observe(this, t -> {
             current = t;
             if (t != null) bind(t, catsById.get(t.categoryId));
         });
 
-        // 2) Posmatraj kategorije (ime/boja)
+
         AppDatabase.get(this).categoryDao().all().observe(this, list -> {
             catsById.clear();
             if (list != null) for (CategoryEntity c : list) catsById.put(c.id, c);
             if (current != null) bind(current, catsById.get(current.categoryId));
         });
 
-        // 3) Status akcije
-        b.btnDone.setOnClickListener(v -> updateStatus("DONE"));
-        b.btnPause.setOnClickListener(v -> updateStatus("PAUSED"));
-        b.btnCancel.setOnClickListener(v -> updateStatus("CANCELED"));
 
-        // 4) Izmjena / Brisanje
+        b.btnDone.setOnClickListener(v -> onDone());
+        b.btnPause.setOnClickListener(v -> onpause());
+        b.btnCancel.setOnClickListener(v -> onCancel());
+        b.btnActivate.setOnClickListener(v -> onActivate()); // dodaj dugme “Aktiviraj” u XML, visible samo kad je PAUSED
+
+
         b.btnEdit.setOnClickListener(v -> {
             if (current == null) return;
             if ("DONE".equals(current.status)) { toast("Završene nije moguće menjati."); return; }
@@ -86,32 +87,45 @@ public class TaskDetailActivity extends AppCompatActivity {
         });
     }
 
-    // ---------- UI bind ----------
+
 
     private void bind(TaskEntity t, @Nullable CategoryEntity cat) {
-        // Naslov / opis
+
         b.tvTitle.setText(t.title == null ? "" : t.title);
         b.tvDesc.setText(t.description == null ? "" : t.description);
 
-        // Kategorija (chip bez ikonica!)
+
         String catName = (cat != null && cat.name != null) ? cat.name : ("Kategorija #" + t.categoryId);
         b.chCategory.setText(catName);
         int color = safeCatColor(cat, t.categoryId);
         b.chCategory.setChipBackgroundColor(ColorStateList.valueOf(color));
 
-        // Vrsta i “kada”
+
         b.chKind.setText(t.kind == null ? "ONE_TIME" : t.kind);
         b.tvWhen.setText(buildWhenText(t));
 
-        // XP
+
         int xp = (t.totalXp != 0 ? t.totalXp : (t.weightXp + t.importanceXp));
         b.tvXp.setText(xp + " XP");
 
-        // Onemogući izmjenu/brisanje za DONE
+
         renderButtons();
     }
 
     private void renderButtons(){
+        if (current == null) return;
+        boolean isRecurring = "RECURRING".equals(current.kind);
+        String st = current.status;
+
+        // Samo ACTIVE može Done/Cancel
+        boolean canResolve = "ACTIVE".equals(st);
+        b.btnDone.setEnabled(canResolve && "ONE_TIME".equals(current.kind)); // vidi napomenu gore
+        b.btnCancel.setEnabled(canResolve);
+
+        // Pause/Activate samo za RECURRING
+        b.btnPause.setEnabled(isRecurring && "ACTIVE".equals(st));
+        b.btnActivate.setEnabled(isRecurring && "PAUSED".equals(st));
+
         boolean canModify = current != null && !"DONE".equals(current.status);
         b.btnEdit.setEnabled(canModify);
         b.btnDelete.setEnabled(canModify);
@@ -143,7 +157,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 (end.isEmpty()   ? "" : " do " + end);
     }
 
-    // ---------- Akcije ----------
+
 
     private void updateStatus(String status){
         AppDatabase.exec(() -> {
@@ -155,13 +169,84 @@ public class TaskDetailActivity extends AppCompatActivity {
         });
     }
 
+    private void onDone() {
+        if (current == null) return;
+        long now = System.currentTimeMillis();
+        long threeDaysAgo = now - 3L*24*60*60*1000;
+
+        AppDatabase.exec(() -> {
+            int rows;
+            if ("ONE_TIME".equals(current.kind)) {
+                rows = dao.markDoneOneTime(current.id, now, threeDaysAgo);
+            } else {
+                // Za RECURRING imamo “seriju”, ne pojedinačno pojavljivanje.
+                // Minimalna implementacija: nije dozvoljeno “DONE” (po specifikaciji se DONE odnosi na izvršenje;
+                // ako želiš po-pojavljivanju, treba druga tabela instance).
+                rows = 0;
+            }
+            runOnUiThread(() -> {
+                if (rows > 0) {
+                    awardXp(xpFor(current));          // XP samo kad prođe validacija
+                    toast("Označeno kao urađeno (+XP)");
+                    finish();
+                } else {
+                    toast("Ne može: zadatak je u budućnosti ili stariji od 3 dana, ili nije ACTIVE.");
+                }
+            });
+        });
+    }
+
+    private void onCancel() {
+        if (current == null) return;
+        AppDatabase.exec(() -> {
+            int rows = dao.markCanceled(current.id);
+            runOnUiThread(() -> {
+                if (rows > 0) { toast("Otkazano."); finish(); }
+                else toast("Ne može: zadatak nije ACTIVE.");
+            });
+        });
+    }
+
+    private void onpause() {
+        if (current == null) return;
+        AppDatabase.exec(() -> {
+            int rows = dao.pauseRecurring(current.id);
+            runOnUiThread(() -> {
+                if (rows > 0) { toast("Pauzirano."); finish(); }
+                else toast("Ne može: samo za aktivne ponavljajuće zadatke.");
+            });
+        });
+    }
+
+    private void onActivate() {
+        if (current == null) return;
+        AppDatabase.exec(() -> {
+            int rows = dao.activateRecurring(current.id);
+            runOnUiThread(() -> {
+                if (rows > 0) { toast("Aktivirano."); finish(); }
+                else toast("Ne može: samo iz statusa PAUSED (ponavljajući).");
+            });
+        });
+    }
+
+    private int xpFor(TaskEntity t) {
+        return (t.totalXp != 0) ? t.totalXp : (t.weightXp + t.importanceXp);
+    }
+
+    private void awardXp(int delta){
+        var sp = getSharedPreferences("stats", MODE_PRIVATE);
+        int cur = sp.getInt("xp", 0);
+        sp.edit().putInt("xp", Math.max(0, cur + delta)).apply();
+    }
+
+
     private void deleteTask(TaskEntity t){
         AppDatabase.exec(() -> {
             int rows;
             if ("ONE_TIME".equals(t.kind)){
                 rows = dao.deleteOneTime(t.id, System.currentTimeMillis());
             } else {
-                long endAt = startOfDay(System.currentTimeMillis()) - 1L; // do “juče”
+                long endAt = startOfDay(System.currentTimeMillis()) - 1L;
                 rows = dao.cancelRecurringFromNow(t.id, endAt);
             }
             runOnUiThread(() -> {
@@ -171,7 +256,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         });
     }
 
-    // ---------- Helpers ----------
+
 
     private long startOfDay(long ts){
         Calendar c = Calendar.getInstance();

@@ -24,7 +24,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
 
 
-    // Callback koji se izvrši SAMO prvi put kad se baza kreira – ubacujemo default kategoriju
     private static final RoomDatabase.Callback SEED = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
@@ -59,7 +58,7 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    // data/AppDatabase.java
+
     public static void exec(Runnable r){
         Executors.newSingleThreadExecutor().execute(r);
     }

@@ -25,7 +25,6 @@ public class DayTaskAdapter extends RecyclerView.Adapter<DayTaskAdapter.VH> {
     @Nullable private final OnItemClick onItemClick;
     @Nullable private final OnRowAction actions;
 
-    // Jedan “glavni” konstruktor – oba callbacka su opciona (mogu biti null)
     public DayTaskAdapter(@Nullable List<TaskEntity> start,
                           @Nullable OnItemClick onItemClick,
                           @Nullable OnRowAction actions) {
@@ -40,7 +39,7 @@ public class DayTaskAdapter extends RecyclerView.Adapter<DayTaskAdapter.VH> {
     }
 
 
-    // Pogodan pomoćni konstruktor kad želiš samo klik na red
+
     public DayTaskAdapter(@Nullable OnItemClick onItemClick) {
         this(null, onItemClick, null);
     }
@@ -65,19 +64,13 @@ public class DayTaskAdapter extends RecyclerView.Adapter<DayTaskAdapter.VH> {
 
         h.itemView.setOnClickListener(v -> { if (onItemClick != null) onItemClick.onClick(it); });
 
-        // Ako u item_day_task.xml imaš dugmad (npr. btnDone/btnPause/btnCancel), ovdje pozovi actions:
-        // if (actions != null) {
-        //   h.btnDone.setOnClickListener(v -> actions.onAction(it, "DONE"));
-        //   h.btnPause.setOnClickListener(v -> actions.onAction(it, "PAUSED"));
-        //   h.btnCancel.setOnClickListener(v -> actions.onAction(it, "CANCELED"));
-        // }
+
     }
 
     @Override public int getItemCount() { return items.size(); }
 
     static class VH extends RecyclerView.ViewHolder {
         final TextView tvTitle, tvTime;
-        // ako dodaš dugmad, deklariraj ih ovdje (npr. MaterialButton btnDone, btnPause, btnCancel)
         VH(@NonNull View v){
             super(v);
             tvTitle = v.findViewById(R.id.tvTitle);

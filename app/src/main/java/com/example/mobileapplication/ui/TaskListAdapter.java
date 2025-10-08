@@ -36,7 +36,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.VH> {
     public void setItems(List<TaskListItem> newItems) {
         items.clear();
         if (newItems != null) items.addAll(newItems);
-        notifyDataSetChanged(); // << OVO je ključno
+        notifyDataSetChanged();
 
     }
 
@@ -93,7 +93,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.VH> {
         }
     }
 
-    // Ako ti zatreba format u adapteru:
     static String formatTs(Long epochMs) {
         if (epochMs == null) return "";
         return new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())

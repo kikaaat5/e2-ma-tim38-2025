@@ -7,7 +7,7 @@ import android.text.style.LineBackgroundSpan;
 public class DotSpanEx implements LineBackgroundSpan {
     private final float radius;
     private final int color;
-    private final int index; // 0,1,2 -> pomjeraj tačku
+    private final int index;
 
     public DotSpanEx(float radius, int color, int index) {
         this.radius = radius;
