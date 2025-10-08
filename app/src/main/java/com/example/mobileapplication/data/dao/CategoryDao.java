@@ -1,9 +1,11 @@
-package com.example.mobileapplication.data;
+package com.example.mobileapplication.data.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.example.mobileapplication.data.models.CategoryEntity;
 
 import java.util.List;
 

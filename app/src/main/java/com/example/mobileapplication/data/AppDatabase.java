@@ -8,6 +8,11 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.example.mobileapplication.data.dao.CategoryDao;
+import com.example.mobileapplication.data.dao.TaskDao;
+import com.example.mobileapplication.data.models.CategoryEntity;
+import com.example.mobileapplication.data.models.TaskEntity;
+
 import java.util.concurrent.Executors;
 
 @Database(

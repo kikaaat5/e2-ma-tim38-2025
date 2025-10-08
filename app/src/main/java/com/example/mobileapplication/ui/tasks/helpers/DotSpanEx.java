@@ -1,4 +1,4 @@
-package com.example.mobileapplication.ui;
+package com.example.mobileapplication.ui.tasks.helpers;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

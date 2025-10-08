@@ -1,4 +1,4 @@
-package com.example.mobileapplication.ui;
+package com.example.mobileapplication.ui.tasks;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,10 +6,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.example.mobileapplication.R;
-import com.example.mobileapplication.data.TaskEntity;
+
+import com.example.mobileapplication.data.models.TaskEntity;
 import com.example.mobileapplication.databinding.ActivityTaskListBinding;
-import com.example.mobileapplication.domain.TaskModels;
+import com.example.mobileapplication.ui.viewModel.TaskListViewModel;
+
 import java.util.ArrayList;
 import java.util.List;
 

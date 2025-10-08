@@ -1,7 +1,7 @@
-package com.example.mobileapplication.ui;
+package com.example.mobileapplication.ui.tasks;
 
-import com.example.mobileapplication.data.TaskEntity;
-import com.example.mobileapplication.domain.TaskModels;
+import com.example.mobileapplication.data.models.TaskEntity;
+import com.example.mobileapplication.data.models.TaskModels;
 
 import org.jetbrains.annotations.Nullable;
 

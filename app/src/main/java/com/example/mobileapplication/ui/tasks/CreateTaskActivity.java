@@ -1,4 +1,4 @@
-package com.example.mobileapplication.ui;
+package com.example.mobileapplication.ui.tasks;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -12,11 +12,11 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileapplication.data.AppDatabase;
-import com.example.mobileapplication.data.CategoryEntity;
-import com.example.mobileapplication.data.TaskDao;
-import com.example.mobileapplication.data.TaskEntity;
+import com.example.mobileapplication.data.models.CategoryEntity;
+import com.example.mobileapplication.data.dao.TaskDao;
 import com.example.mobileapplication.databinding.ActivityCreateTaskBinding;
-import com.example.mobileapplication.domain.TaskModels;
+import com.example.mobileapplication.data.models.TaskModels;
+import com.example.mobileapplication.ui.viewModel.CreateTaskViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;

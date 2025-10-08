@@ -1,4 +1,4 @@
-package com.example.mobileapplication.ui;
+package com.example.mobileapplication.ui.tasks;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -10,9 +10,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mobileapplication.data.AppDatabase;
-import com.example.mobileapplication.data.CategoryEntity;
-import com.example.mobileapplication.data.TaskDao;
-import com.example.mobileapplication.data.TaskEntity;
+import com.example.mobileapplication.data.models.CategoryEntity;
+import com.example.mobileapplication.data.dao.TaskDao;
+import com.example.mobileapplication.data.models.TaskEntity;
 import com.example.mobileapplication.databinding.ActivityTaskDetailBinding;
 
 import java.text.SimpleDateFormat;

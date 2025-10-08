@@ -1,4 +1,4 @@
-package com.example.mobileapplication.ui;
+package com.example.mobileapplication.ui.tasks;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.mobileapplication.R;
-import com.example.mobileapplication.data.TaskEntity;
+import com.example.mobileapplication.data.models.TaskEntity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
