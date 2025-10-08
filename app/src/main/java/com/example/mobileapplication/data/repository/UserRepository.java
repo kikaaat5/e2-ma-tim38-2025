@@ -16,6 +16,7 @@ public class UserRepository {
 
     public boolean loginUser(String email, String password) {
         // TODO: implementirati FirebaseAuth.signInWithEmailAndPassword()
+
         return true;
     }
 

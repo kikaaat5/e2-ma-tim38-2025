@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileapplication.R;
 import com.example.mobileapplication.ui.viewModel.AuthViewModel;
+import com.google.firebase.FirebaseApp;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -21,6 +22,8 @@ public class LoginActivity extends ComponentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        FirebaseApp.initializeApp(this);
+        System.out.println("🔥 Firebase je uspešno inicijalizovan!");
 
         viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         // ✅ 2️⃣ Poveži UI elemente iz XML-a
@@ -41,6 +44,7 @@ public class LoginActivity extends ComponentActivity {
             else
                 System.out.println("❌ Login neuspešan!");
         });
+
 
         viewModel.getErrorMessage().observe(this, msg -> {
             if (msg != null && !msg.isEmpty()) {
