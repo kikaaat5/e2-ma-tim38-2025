@@ -31,5 +31,5 @@ public class TaskEntity {
     public long createdAt;
 
     @NonNull
-    public String status = "ACTIVE"; // ACTIVE | DONE | CANCELED | PAUSED
+    public String status = "ACTIVE";
 }

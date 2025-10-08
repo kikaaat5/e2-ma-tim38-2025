@@ -40,10 +40,10 @@ public final class TaskModels {
 
     public static final class TaskDraft {
         public String title;
-        public String description; // optional
+        public String description;
         public long categoryId;
         public TaskKind kind;
-        public long scheduledAtEpochMillis; // ONE_TIME
+        public long scheduledAtEpochMillis;
 
         // RECURRING:
         public Integer repeatEvery;
@@ -59,5 +59,5 @@ public final class TaskModels {
         }
     }
 
-    private TaskModels() {} // no instances
+    private TaskModels() {}
 }

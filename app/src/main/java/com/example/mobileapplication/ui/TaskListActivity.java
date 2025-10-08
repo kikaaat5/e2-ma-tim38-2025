@@ -31,11 +31,10 @@ public class TaskListActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
 
         adapter = new TaskListAdapter(
-                // klik na stavku -> otvori detalje
+
                 item -> TaskDetailActivity.start(this, item.id),
 
-                // akcije sa reda -> promijeni status preko ViewModel-a
-                (item, action) -> vm.setStatus(item.id, action)  // action: "DONE" | "PAUSED" | "CANCELED"
+                (item, action) -> vm.setStatus(item.id, action)
         );
         binding.rvTasks.setLayoutManager(new LinearLayoutManager(this));
 
@@ -54,18 +53,21 @@ public class TaskListActivity extends AppCompatActivity {
 
             if (entities != null) {
                 for (TaskEntity e : entities) {
-                    if (!"ACTIVE".equals(e.status)) continue; // prikazuj samo aktivne
+                    if (!"ACTIVE".equals(e.status)) continue;
 
-                    TaskListItem it = toItem(e);             // ista metoda iz mog prošlog odgovora
+                    TaskListItem it = toItem(e);
 
                     if ("ONE_TIME".equals(e.kind)) {
-                        // pokaži samo današnje i buduće
                         if (e.scheduledAt == null || e.scheduledAt >= today0) {
                             cacheOneTime.add(it);
                         }
                     } else if ("RECURRING".equals(e.kind)) {
-                        // prikaži sve RECURRING (ili, ako želiš, filtriraj po periodu)
-                        cacheRecurring.add(it);
+                        Long end   = e.repeatEndAt; // may be null (open-ended)
+
+                        // Show only if series still spans today (start <= today <= end|∞)
+                        if (end == null || end >= today0) {
+                            cacheRecurring.add(it);
+                        }
                     }
                 }
             }
@@ -93,8 +95,7 @@ public class TaskListActivity extends AppCompatActivity {
         binding.fabAdd.setOnClickListener(v ->
                 startActivity(new Intent(this, CreateTaskActivity.class)));
 
-        // TODO: zamijeni mock sa realnim čitanjem iz tvoje baze (DAO/Repository)
-        //adapter.submit(mockData());
+
     }
 
     private long startOfToday(long ts){
@@ -110,8 +111,7 @@ public class TaskListActivity extends AppCompatActivity {
 
     @Override protected void onResume() {
         super.onResume();
-        // Osvježi listu nakon povratka sa kreiranja zadatka
-        // adapter.submit(repository.getAllTaskListItems());
+
     }
 
     private void showTab(List<TaskListItem> data) {
@@ -124,9 +124,8 @@ public class TaskListActivity extends AppCompatActivity {
         it.id = e.id;
         it.title = e.title;
         it.description = e.description;
-        it.kind = e.kind;                           // "ONE_TIME" | "RECURRING"
+        it.kind = e.kind;
 
-        // WHEN tekst
         if ("ONE_TIME".equals(e.kind)) {
             it.whenText = fmt(e.scheduledAt);
         } else {
@@ -137,7 +136,6 @@ public class TaskListActivity extends AppCompatActivity {
             it.whenText = base + start + end;
         }
 
-        // XP prikaz (ako TaskListItem ima polje valueXp)
         it.valueXp = (e.weightXp) + (e.importanceXp);
         return it;
     }

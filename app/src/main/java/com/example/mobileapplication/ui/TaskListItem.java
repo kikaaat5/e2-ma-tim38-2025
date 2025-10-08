@@ -12,20 +12,20 @@ import java.util.List;
 import java.util.Locale;
 
 public class TaskListItem {
-    public long id; // ako imaš iz baze; inače 0
+    public long id;
     public String title;
     public String description;
     public String kind;
-    public Long scheduledAtEpochMillis;        // za ONE_TIME
-    public Integer repeatEvery;                // za RECURRING
-    public TaskModels.RepeatUnit repeatUnit;   // za RECURRING
-    public Long repeatStartEpochMillis;        // za RECURRING
-    public Long repeatEndEpochMillis;          // za RECURRING
+    public Long scheduledAtEpochMillis;
+    public Integer repeatEvery;
+    public TaskModels.RepeatUnit repeatUnit;
+    public Long repeatStartEpochMillis;
+    public Long repeatEndEpochMillis;
     public TaskModels.TaskWeightXP weight;
     public TaskModels.TaskImportanceXP importance;
-    public String whenText;      // gotov tekst za prikaz
+    public String whenText;
 
-    public int valueXp;          // ukupni XP
+    public int valueXp;
 
     public int totalXp() {
         int w = (weight != null) ? weight.xp : 0;
@@ -57,7 +57,6 @@ public class TaskListItem {
                 it.whenText = "";
             }
 
-            // XP – pretpostavljamo da su u entitetu numerička polja weightXp i importanceXp
             it.valueXp = safeNum(e.weightXp) + safeNum(e.importanceXp);
 
             out.add(it);

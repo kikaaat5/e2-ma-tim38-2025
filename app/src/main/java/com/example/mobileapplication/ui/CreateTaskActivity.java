@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileapplication.data.AppDatabase;
 import com.example.mobileapplication.data.CategoryEntity;
+import com.example.mobileapplication.data.TaskDao;
+import com.example.mobileapplication.data.TaskEntity;
 import com.example.mobileapplication.databinding.ActivityCreateTaskBinding;
 import com.example.mobileapplication.domain.TaskModels;
 
@@ -24,12 +26,12 @@ public class CreateTaskActivity extends ComponentActivity {
     private ActivityCreateTaskBinding b;
     private CreateTaskViewModel vm;
 
-    // Kategorije (UI i referenca)
+private TaskDao dao;
     private final List<CategoryEntity> catRef = new ArrayList<>();
     private ArrayAdapter<String> categoryAdapter;
     private long selectedCategoryId = -1L;
 
-    private long editId = -1;            // <— DODAJ OVO
+    private long editId = -1;
 
 
     public static final String EXTRA_TASK_ID = "EXTRA_TASK_ID";
@@ -45,12 +47,17 @@ public class CreateTaskActivity extends ComponentActivity {
         b = ActivityCreateTaskBinding.inflate(getLayoutInflater());
         setContentView(b.getRoot());
 
-        long editId = getIntent().getLongExtra(EXTRA_TASK_ID, -1);
+        vm = new ViewModelProvider(
+                this,
+                new CreateTaskViewModel.Factory(getApplication())
+        ).get(CreateTaskViewModel.class);
+
+        this.editId = getIntent().getLongExtra(EXTRA_TASK_ID, -1);
         if (editId != -1) {
-            // Prefill polja postojećim taskom
+
             AppDatabase.get(this).taskDao().byId(editId).observe(this, t -> {
                 if (t == null) return;
-                // popuni formu
+
                 b.etTitle.setText(t.title);
                 b.etDesc.setText(t.description);
                 selectedCategoryId = t.categoryId;
@@ -59,9 +66,8 @@ public class CreateTaskActivity extends ComponentActivity {
                 b.swRecurring.setChecked(isRecurring);
                 b.tilOneTime.setVisibility(isRecurring? View.GONE: View.VISIBLE);
                 b.groupRecurring.setVisibility(isRecurring? View.VISIBLE: View.GONE);
+                long now = System.currentTimeMillis();
 
-                // težina/bitnost (preko enum mape ako koristiš)
-                // ili direktno indeks – podešavanje spinnera:
                 b.spWeight.setSelection(TaskModels.TaskWeightXP.indexOfXp(t.weightXp));
                 b.spImportance.setSelection(TaskModels.TaskImportanceXP.indexOfXp(t.importanceXp));
 
@@ -82,44 +88,41 @@ public class CreateTaskActivity extends ComponentActivity {
                         b.etRepeatEnd.setTag(t.repeatEndAt);
                     }
                 }
+                //long id = vm.save(t, editId);
+               // b.btnSave.setOnClickListener(v -> onEdit(t, editId) );
+
             });
+
+
+            //b.btnSave.setOnClickListener(v -> onEdit(t, editId) );
         }
 
 
-        vm = new ViewModelProvider(
-                this,
-                new CreateTaskViewModel.Factory(getApplication())
-        ).get(CreateTaskViewModel.class);
-
-        editId = getIntent().getLongExtra(EXTRA_TASK_ID, -1);   // <— SAČUVAJ GA
-        if (editId != -1) {
-            AppDatabase.get(this).taskDao().byId(editId).observe(this, t -> { /* ...prefill... */ });
-        }
-
-        // SEED ako nema kategorija
-        new Thread(() -> {
-            try {
-                if (AppDatabase.get(this).categoryDao().count() < 2) {
-                    CategoryEntity c = new CategoryEntity();
-                    c.name = "General";
-                    c.colorHex = "#9E9E9E"; // ili šta već imaš u entitetu
-                    AppDatabase.get(this).categoryDao().insert(c);
-                    CategoryEntity c1 = new CategoryEntity();
-                    c.name = "Sport";
-                    c.colorHex = "#9E9E9E"; // ili šta već imaš u entitetu
-                    AppDatabase.get(this).categoryDao().insert(c1);
+            new Thread(() -> {
+                try {
+                    if (AppDatabase.get(this).categoryDao().count() < 2) {
+                        CategoryEntity c = new CategoryEntity();
+                        c.name = "General";
+                        c.colorHex = "#9E9E9E";
+                        AppDatabase.get(this).categoryDao().insert(c);
+                        CategoryEntity c1 = new CategoryEntity();
+                        c.name = "Sport";
+                        c.colorHex = "#9E9E9E";
+                        AppDatabase.get(this).categoryDao().insert(c1);
+                    }
+                } catch (Exception ignored) {
                 }
-            } catch (Exception ignored) { }
-        }).start();
+            }).start();
 
-        setupSpinners();
-        setupSwitch();
-        setupPickers();
-        b.btnSave.setOnClickListener(v -> onSave());
+            setupSpinners();
+            setupSwitch();
+            setupPickers();
+            b.btnSave.setOnClickListener(v -> onSave(this.editId));
+
     }
 
     private void setupSpinners() {
-        // Težina / Bitnost / Jedinica ponavljanja
+
         b.spWeight.setAdapter(new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_dropdown_item,
                 TaskModels.TaskWeightXP.values()
@@ -133,7 +136,7 @@ public class CreateTaskActivity extends ComponentActivity {
                 TaskModels.RepeatUnit.values()
         ));
 
-        // Kategorije – prazan adapter, pa Observe iz Room-a
+
         categoryAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_dropdown_item, new ArrayList<>()
         );
@@ -148,10 +151,10 @@ public class CreateTaskActivity extends ComponentActivity {
             @Override public void onNothingSelected(android.widget.AdapterView<?> parent) { }
         });
 
-        // POSMATRANJE kategorija
+
         AppDatabase.get(this)
                 .categoryDao()
-                .all() // LiveData<List<CategoryEntity>>
+                .all()
                 .observe(this, list -> {
                     catRef.clear();
                     categoryAdapter.clear();
@@ -163,7 +166,7 @@ public class CreateTaskActivity extends ComponentActivity {
                         }
                         categoryAdapter.notifyDataSetChanged();
 
-                        // Default – prva kategorija
+
                         if (selectedCategoryId <= 0) {
                             selectedCategoryId = list.get(0).id;
                             b.spCategory.setSelection(0);
@@ -216,45 +219,59 @@ public class CreateTaskActivity extends ComponentActivity {
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    private void onSave() {
+
+
+    /*private void onEdit(TaskEntity t, long id){
+    long newid = vm.edit(t, id);
+    Toast.makeText(this, "Izmijenjeno. ID=" + id, Toast.LENGTH_LONG).show();
+    finish();
+    }*/
+
+    private void onSave(long editId) {
         try {
-            // Validacije
-            String title = String.valueOf(b.etTitle.getText()).trim();
-            if (title.isEmpty()) {
-                Toast.makeText(this, "Unesi naziv zadatka.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (selectedCategoryId <= 0) {
-                Toast.makeText(this, "Izaberi kategoriju.", Toast.LENGTH_SHORT).show();
-                return;
-            }
 
-            TaskModels.TaskDraft d = new TaskModels.TaskDraft();
-            d.title = title;
-            d.description = String.valueOf(b.etDesc.getText()).trim();
-            d.categoryId = selectedCategoryId;
+                String title = String.valueOf(b.etTitle.getText()).trim();
+                if (title.isEmpty()) {
+                    Toast.makeText(this, "Unesi naziv zadatka.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (selectedCategoryId <= 0) {
+                    Toast.makeText(this, "Izaberi kategoriju.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-            boolean recurring = b.swRecurring.isChecked();
-            d.kind = recurring ? TaskModels.TaskKind.RECURRING : TaskModels.TaskKind.ONE_TIME;
+                TaskModels.TaskDraft d = new TaskModels.TaskDraft();
+                d.title = title;
+                d.description = String.valueOf(b.etDesc.getText()).trim();
+                d.categoryId = selectedCategoryId;
 
-            d.weight = (TaskModels.TaskWeightXP) b.spWeight.getSelectedItem();
-            d.importance = (TaskModels.TaskImportanceXP) b.spImportance.getSelectedItem();
+                boolean recurring = b.swRecurring.isChecked();
+                d.kind = recurring ? TaskModels.TaskKind.RECURRING : TaskModels.TaskKind.ONE_TIME;
 
-            if (!recurring) {
-                Object tag = b.etOneTimeWhen.getTag();
-                d.scheduledAtEpochMillis = (tag instanceof Long) ? (Long) tag : 0L;
-            } else {
-                d.repeatEvery = parseIntSafe(b.etRepeatEvery.getText());
-                d.repeatUnit = (TaskModels.RepeatUnit) b.spRepeatUnit.getSelectedItem();
-                Object sTag = b.etRepeatStart.getTag();
-                Object eTag = b.etRepeatEnd.getTag();
-                d.repeatStartEpochMillis = (sTag instanceof Long) ? (Long) sTag : null;
-                d.repeatEndEpochMillis   = (eTag instanceof Long) ? (Long) eTag : null;
-            }
+                d.weight = (TaskModels.TaskWeightXP) b.spWeight.getSelectedItem();
+                d.importance = (TaskModels.TaskImportanceXP) b.spImportance.getSelectedItem();
 
-            long id = vm.save(d, editId);
-            Toast.makeText(this, "Sačuvano. ID=" + id, Toast.LENGTH_LONG).show();
-            finish();
+                if (!recurring) {
+                    Object tag = b.etOneTimeWhen.getTag();
+                    d.scheduledAtEpochMillis = (tag instanceof Long) ? (Long) tag : 0L;
+                } else {
+                    d.repeatEvery = parseIntSafe(b.etRepeatEvery.getText());
+                    d.repeatUnit = (TaskModels.RepeatUnit) b.spRepeatUnit.getSelectedItem();
+                    Object sTag = b.etRepeatStart.getTag();
+                    Object eTag = b.etRepeatEnd.getTag();
+                    d.repeatStartEpochMillis = (sTag instanceof Long) ? (Long) sTag : null;
+                    d.repeatEndEpochMillis = (eTag instanceof Long) ? (Long) eTag : null;
+                }
+
+                        long id = vm.save(d, editId);
+                        Toast.makeText(this, "Sačuvano. ID=" + id, Toast.LENGTH_LONG).show();
+                        finish();
+
+
+
+
+
+
         } catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
         }

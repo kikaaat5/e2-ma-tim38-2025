@@ -11,11 +11,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/** Dekorator: nacrta tačke u 1-3 boje za dan koji ima zadatke. */
 public class EventDecorater implements DayViewDecorator {
 
     private final Set<CalendarDay> days = new HashSet<>();
-    private final int[] dotColors; // do 3 boje
+    private final int[] dotColors;
 
     public EventDecorater(List<CalendarDay> days, int[] dotColors) {
         if (days != null) this.days.addAll(days);
@@ -29,7 +28,7 @@ public class EventDecorater implements DayViewDecorator {
     @Override public void decorate(DayViewFacade view) {
         // do tri tačke u različitim bojama
         for (int i = 0; i < dotColors.length && i < 3; i++) {
-            view.addSpan(new DotSpanEx(6, dotColors[i], i)); // 6dp radijus, offset i
+            view.addSpan(new DotSpanEx(6, dotColors[i], i));
         }
     }
 }

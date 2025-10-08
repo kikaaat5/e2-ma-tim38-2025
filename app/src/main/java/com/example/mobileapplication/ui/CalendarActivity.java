@@ -34,9 +34,9 @@ public class CalendarActivity extends AppCompatActivity {
 
     private DayTaskAdapter dayAdapter;
 
-    // cache: datum -> tasks tog dana
+
     private final Map<Long, Integer> catColors = new HashMap<>();
-    private long currentDayStart; // cache
+    private long currentDayStart;
     private final Map<Long, List<TaskEntity>> byDay = new HashMap<>();
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,13 +46,12 @@ public class CalendarActivity extends AppCompatActivity {
 
         taskDao = AppDatabase.get(this).taskDao();
 
-        // Lista za izabrani dan
+
         b.rvDay.setLayoutManager(new LinearLayoutManager(this));
         dayAdapter = new DayTaskAdapter(
-                // klik na red -> TaskDetailActivity (ekran sa dugmadima Izmijeni/Obriši)
+
                 item -> TaskDetailActivity.start(CalendarActivity.this, item.id),
 
-                // akcije iz reda (ako ih imaš u item_day_task) -> update + refresh izabranog dana
                 (item, action) -> {
                     AppDatabase.exec(() -> {
                         taskDao.updateStatus(item.id, action);
@@ -62,19 +61,17 @@ public class CalendarActivity extends AppCompatActivity {
         );
         b.rvDay.setAdapter(dayAdapter);
 
-        // kada se promijeni datum u gridu
         b.mcal.setOnDateChangedListener((widget, date, selected) -> {
             long ts = atStartOfDay(date);
             List<TaskEntity> list = byDay.getOrDefault(ts, new ArrayList<>());
             dayAdapter.submit(list);
         });
 
-        // posmatraj sve zadatke i nacrtaj dekoratore
-        // (ako koristiš LiveData u DAO-u: getAll() -> LiveData<List<TaskEntity>>)
+
         taskDao.getAll().observe(this, tasks -> {
             if (tasks == null) tasks = new ArrayList<>();
-            prepareCalendarData(tasks);           // popuni byDay i dekoratore
-            // setuj današnji dan u listi
+            prepareCalendarData(tasks);
+
             long today = startOfDay(System.currentTimeMillis());
             dayAdapter.submit(byDay.getOrDefault(today, new ArrayList<>()));
         });
@@ -87,17 +84,14 @@ public class CalendarActivity extends AppCompatActivity {
         dayAdapter.submit(byDay.getOrDefault(ts, new ArrayList<>()));
     }
 
-    /** Grupisanje po danu + dekoratori sa bojama kategorija. */
     private void prepareCalendarData(List<TaskEntity> tasks) {
         byDay.clear();
 
-        // mapiranje id kategorije -> boja
-        //Map<Long, Integer> catColors = loadCategoryColors();
+
         loadCategoryColors();
-        // prođi kroz sve dane koje zahvataju zadaci i grupiši
-        // (ONE_TIME direktno; RECURRING: “pokrij” period Start..End korakom perioda)
+
         for (TaskEntity t : tasks) {
-            if (!"ACTIVE".equals(t.status)) continue; // po želji filtriraj
+            //if (!"ACTIVE".equals(t.status)) continue;
 
             if ("ONE_TIME".equals(t.kind)) {
                 if (t.scheduledAt != null) {
@@ -112,15 +106,15 @@ public class CalendarActivity extends AppCompatActivity {
                 } else if ("WEEK".equals(t.repeatUnit)) {
                     periodMs = every * 7L * 24L * 60 * 60 * 1000;
                 } else {
-                    continue; // nepoznata jedinica
+                    continue;
                 }
                 long from = startOfDay(t.repeatStartAt);
-                long to   = (t.repeatEndAt != null) ? startOfDay(t.repeatEndAt) : from + 90L * 24 * 60 * 60 * 1000; // ograniči 90d da ne rendera beskonačno
+                long to   = (t.repeatEndAt != null) ? startOfDay(t.repeatEndAt) : from + 90L * 24 * 60 * 60 * 1000;
                 for (long d = from; d <= to; d += periodMs) putOnDay(d, t);
             }
         }
 
-        // postavi dekoratore (po danu do 3 boje)
+
         b.mcal.removeDecorators();
         List<CalendarDay> allDays = new ArrayList<>();
         Map<Long, int[]> colorPerDay = new HashMap<>();
@@ -129,7 +123,7 @@ public class CalendarActivity extends AppCompatActivity {
             long dayTs = e.getKey();
             List<TaskEntity> list = e.getValue();
 
-            // skupi do 3 jedinstvene boje kategorija
+
             List<Integer> colors = new ArrayList<>();
             for (TaskEntity t : list) {
                 Integer c = catColors.get(t.categoryId);
@@ -147,8 +141,7 @@ public class CalendarActivity extends AppCompatActivity {
             colorPerDay.put(dayTs, arr);
         }
 
-        // da ne pravimo po jedan dekorator za svaki dan, možemo grupisati po kombinaciji boja,
-        // ali radi jednostavnosti: jedan dekorator po danu
+
         for (Map.Entry<Long, int[]> e : colorPerDay.entrySet()) {
             CalendarDay cd = toCalendarDay(e.getKey());
             List<CalendarDay> one = new ArrayList<>();
@@ -169,14 +162,10 @@ public class CalendarActivity extends AppCompatActivity {
     private Map<Long, Integer> loadCategoryColors() {
         catColors.clear();
 
-        // Ako CategoryDao.all() vraća SYNC listu:
-        //List<CategoryEntity> cats = AppDatabase.get(this).categoryDao().all();
 
-        // Ako vraća LiveData<List<CategoryEntity>>, koristi:
         AppDatabase.get(this).categoryDao().all().observe(this, list -> { if (list != null) {
             for (CategoryEntity c : list) {
-                // prilagodi tipu u tvojoj tabeli:
-                // 1) ako čuvaš int ARGB (npr. 0xFFAABBCC):
+
                 int color = (c.colorHex != null && !c.colorHex.isEmpty())
                         ? Color.parseColor(c.colorHex)
                         : fallbackColorFor(c.id);
@@ -220,7 +209,7 @@ public class CalendarActivity extends AppCompatActivity {
         return c.getTimeInMillis();
     }
 
-    // ————— Sheet: detalji + promjena statusa —————
+
 
     private void showTaskSheet(TaskEntity t) {
         View v = LayoutInflater.from(this).inflate(android.R.layout.simple_list_item_2, null, false);
@@ -246,11 +235,11 @@ public class CalendarActivity extends AppCompatActivity {
 
     private void updateStatusAndRefresh(long id, String action) {
         AppDatabase.get(this).taskDao().updateStatus(id, action);
-        // osvježi listu za trenutno selektovani dan
-        CalendarDay sel = b.mcal.getSelectedDate();
+
+        /*CalendarDay sel = b.mcal.getSelectedDate();
         if (sel == null) sel = CalendarDay.today();
         long ts = atStartOfDay(sel);
         List<TaskEntity> list = byDay.getOrDefault(ts, new ArrayList<>());
-        dayAdapter.submit(list);
+        dayAdapter.submit(list);*/
     }
 }

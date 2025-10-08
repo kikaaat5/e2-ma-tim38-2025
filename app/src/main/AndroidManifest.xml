@@ -21,8 +21,7 @@
             </intent-filter>
         </activity>
 
-        <!-- (Ako postoji stari MainActivity, ostavi ga bez intent-filtera) -->
-        <!-- <activity android:name=".MainActivity" android:exported="false" /> -->
+
 
     </application>
 
