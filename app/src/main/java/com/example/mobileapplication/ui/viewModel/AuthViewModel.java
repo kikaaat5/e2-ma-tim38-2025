@@ -27,23 +27,32 @@ public class AuthViewModel extends ViewModel {
     }
 
     public void login(String email, String password) {
-        boolean result = authService.login(email, password);
-        if (result) {
-            loginSuccess.postValue(true);
-        } else {
-            errorMessage.postValue("Neuspešna prijava. Proveri podatke.");
-            loginSuccess.postValue(false);
-        }
+        authService.login(email, password, task -> {
+            if (task.isSuccessful()) {
+                loginSuccess.postValue(true);
+            } else {
+                Exception e = task.getException();
+                errorMessage.postValue(
+                        e != null ? "❌ Login neuspešan: " + e.getMessage() : "❌ Login neuspešan."
+                );
+                loginSuccess.postValue(false);
+            }
+        });
     }
 
+
     public void register(User user, String password, String confirmPassword) {
-        boolean result = authService.register(user, password, confirmPassword);
-        if (result) {
-            registrationSuccess.postValue(true);
-        } else {
-            errorMessage.postValue("Registracija neuspešna. Proveri unete podatke.");
-            registrationSuccess.postValue(false);
-        }
+        authService.register(user, password, confirmPassword, task -> {
+            if (task.isSuccessful()) {
+                registrationSuccess.postValue(true);
+            } else {
+                Exception e = task.getException();
+                errorMessage.postValue(
+                        e != null ? "❌ Registracija neuspešna: " + e.getMessage() : "❌ Registracija neuspešna."
+                );
+                registrationSuccess.postValue(false);
+            }
+        });
     }
 
     public void logout() {

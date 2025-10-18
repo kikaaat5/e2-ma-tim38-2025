@@ -12,19 +12,52 @@ public class User implements Serializable {
         private int pp;
         private int coins;
         private String title;
+         private String avatar;
+
+    private int level = 1;
+
+    private int badges = 0;
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getBadges() {
+        return badges;
+    }
+
+    public void setBadges(int badges) {
+        this.badges = badges;
+    }
+
+    public String getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(String equipment) {
+        this.equipment = equipment;
+    }
+
+    private String equipment = "Osnovna oprema";
 
         public User() {}
 
-        public User(String id, String email, String username, String avatarUrl) {
+        public User(String id, String email, String username, String avatar) {
             this.id = id;
             this.email = email;
             this.username = username;
-            this.avatarUrl = avatarUrl;
+            this.avatar = avatar;
             this.xp = 0;
             this.pp = 0;
             this.coins = 0;
             this.title = "Novajlija";
+
         }
+
 
 
         public String getId() { return id; }
@@ -35,9 +68,6 @@ public class User implements Serializable {
 
         public String getUsername() { return username; }
         public void setUsername(String username) { this.username = username; }
-
-        public String getAvatarUrl() { return avatarUrl; }
-        public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
 
         public int getXp() { return xp; }
         public void setXp(int xp) { this.xp = xp; }
@@ -50,4 +80,8 @@ public class User implements Serializable {
 
         public String getTitle() { return title; }
         public void setTitle(String title) { this.title = title; }
+
+
+    public String getAvatar() { return avatar; }
+    public void setAvatar(String avatar) { this.avatar = avatar; }
 }

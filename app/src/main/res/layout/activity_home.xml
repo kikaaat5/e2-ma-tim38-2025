@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="24dp"
+    tools:context=".ui.HomeActivity">
+
+    <!-- 🔹 Logout link u gornjem levom uglu -->
+    <TextView
+        android:id="@+id/tvLogout"
+        android:text="Odjavi se"
+        android:textColor="#BB86FC"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="12dp"
+        android:textSize="16sp"
+        android:layout_height="20dp"
+        android:layout_width="100dp"/>
+
+    <!-- 🔹 Glavni naslov -->
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="Dobrodošao u Habit RPG!"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <!-- 🔹 Meni dugmad -->
+    <LinearLayout
+        android:id="@+id/menuContainer"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnTasks"
+            android:text="Zadaci"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnProfile"
+            android:text="Profil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btnStats"
+            android:text="Statistika"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -12,6 +12,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        DBHelper dbHelper = new DBHelper(this);
+// Otvaranjem getWritableDatabase() osiguravaš da se onCreate() izvrši i admin ubaci
+        dbHelper.getWritableDatabase();
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
