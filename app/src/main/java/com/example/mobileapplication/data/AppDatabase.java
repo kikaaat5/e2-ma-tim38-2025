@@ -63,7 +63,6 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-
     public static void exec(Runnable r){
         Executors.newSingleThreadExecutor().execute(r);
     }

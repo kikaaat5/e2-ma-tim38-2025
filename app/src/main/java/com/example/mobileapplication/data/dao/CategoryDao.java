@@ -27,6 +27,9 @@ public interface CategoryDao {
     @Query("SELECT COUNT(*) FROM categories")
     int count();
 
+    @Query("SELECT * FROM categories")
+    List<CategoryEntity> getAllCategoriesSync();
+
     @Query("SELECT COUNT(*) FROM categories WHERE LOWER(colorHex)=LOWER(:hex)")
     int existsColor(String hex);
 

@@ -1,6 +1,8 @@
 package com.example.mobileapplication;
 
 import android.app.Application;
+import android.content.Context;
+
 import dagger.hilt.android.HiltAndroidApp;
 
 /**
@@ -10,4 +12,15 @@ import dagger.hilt.android.HiltAndroidApp;
 @HiltAndroidApp
 public class MobileApplication extends Application {
 
+    private static MobileApplication instance;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        instance = this;
+    }
+
+    public static Context getAppContext() {
+        return instance.getApplicationContext();
+    }
 }

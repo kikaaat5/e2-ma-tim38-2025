@@ -12,6 +12,7 @@ coreKtx = "1.17.0"
 mcal = "2.0.1"
 roomRuntime = "2.8.1"
 roomCompiler = "2.8.1"
+lifecycleProcess = "2.9.4"
 
 
 [libraries]
@@ -26,6 +27,7 @@ core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx"
 materialcalendarview = { module = "com.prolificinteractive:material-calendarview", version.ref = "mcal" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
+lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleProcess" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

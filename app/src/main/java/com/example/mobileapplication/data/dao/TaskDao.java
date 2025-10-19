@@ -25,6 +25,27 @@ public interface TaskDao {
     @Query("DELETE FROM tasks WHERE id=:id")
     void delete(long id);
 
+    @Query("SELECT COUNT(*) FROM tasks WHERE status = 'DONE'")
+    int getCompletedCount();
+
+    @Query("SELECT COUNT(*) FROM tasks WHERE status = 'ACTIVE'")
+    int getActiveCount();
+
+    @Query("SELECT COUNT(*) FROM tasks WHERE status = 'CANCELLED'")
+    int getCancelledCount();
+
+    @Query("SELECT COUNT(*) FROM tasks")
+    int getTotalCount();
+
+    @Query("SELECT * FROM tasks")
+    List<TaskEntity> getAllTasksSync();
+
+    @Query("SELECT totalXp FROM tasks WHERE status = 'DONE'")
+    List<Integer> getCompletedXpValues();
+
+    @Query("SELECT createdAt FROM tasks ORDER BY createdAt DESC LIMIT 7")
+    List<Long> getRecentCreationDates();
+
     @Query("""
 UPDATE tasks SET
   title=:title,
@@ -103,6 +124,10 @@ WHERE kind='ONE_TIME' AND status='ACTIVE'
 """)
     int sweepOverdueToNotDone(long limitTs);
 
+
+
+    @Query("SELECT COUNT(*) FROM tasks")
+    int getTotalTasks();
     @Query("""
 SELECT COUNT(*) FROM tasks
 WHERE status='DONE'
