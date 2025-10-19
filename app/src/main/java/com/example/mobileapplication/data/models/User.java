@@ -7,16 +7,22 @@ public class User implements Serializable {
     private String id;
     private String email;
     private String username;
-    private String avatarUrl;
     private int xp;
     private int pp;
     private int coins;
     private String title;
     private String avatar;
-
     private int level = 1;
-
     private int badges = 0;
+    private int nextLevelXp = 200;
+
+    public int getNextLevelXp() {
+        return nextLevelXp;
+    }
+
+    public void setNextLevelXp(int nextLevelXp) {
+        this.nextLevelXp = nextLevelXp;
+    }
 
     private String equipment = "Osnovna oprema";
 

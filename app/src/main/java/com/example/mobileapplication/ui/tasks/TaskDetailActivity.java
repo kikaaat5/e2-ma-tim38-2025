@@ -14,6 +14,7 @@ import com.example.mobileapplication.data.models.CategoryEntity;
 import com.example.mobileapplication.data.dao.TaskDao;
 import com.example.mobileapplication.data.models.TaskEntity;
 import com.example.mobileapplication.databinding.ActivityTaskDetailBinding;
+import com.example.mobileapplication.domain.serviceImpl.LevelManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -66,7 +67,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         b.btnDone.setOnClickListener(v -> onDone());
         b.btnPause.setOnClickListener(v -> onpause());
         b.btnCancel.setOnClickListener(v -> onCancel());
-        b.btnActivate.setOnClickListener(v -> onActivate()); // dodaj dugme “Aktiviraj” u XML, visible samo kad je PAUSED
+        b.btnActivate.setOnClickListener(v -> onActivate());
 
 
         b.btnEdit.setOnClickListener(v -> {
