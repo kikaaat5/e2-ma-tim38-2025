@@ -10,7 +10,8 @@
         android:title="Zadaci"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_scrollFlags="scroll|enterAlways" />
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:menu="@menu/menu_task_list"/>
 
 
 
@@ -40,6 +41,16 @@
         android:layout_gravity="bottom|end"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Kategorije"
+        app:srcCompat="@android:drawable/ic_menu_manage"
+        app:layout_anchorGravity="bottom|start"
+        android:layout_margin="16dp"
+        android:layout_gravity="bottom|start"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabCalendar"
         android:contentDescription="Kalendar"
         android:layout_width="wrap_content"
@@ -48,5 +59,17 @@
         app:layout_anchor="@id/rvTasks"
         app:layout_anchorGravity="top|end"
         app:srcCompat="@drawable/baseline_calendar_today_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabBossTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/app_name"
+        app:layout_anchorGravity="bottom|center"
+        android:layout_gravity="bottom|center"
+        app:srcCompat="@drawable/coin" />  <!-- ili @drawable/ic_play_arrow ako nemaš ikonicu -->
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

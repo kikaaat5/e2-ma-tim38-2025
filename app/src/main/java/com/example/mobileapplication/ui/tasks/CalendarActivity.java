@@ -33,6 +33,8 @@ public class CalendarActivity extends AppCompatActivity {
 
     private DayTaskAdapter dayAdapter;
 
+    // CalendarActivity
+    private List<TaskEntity> lastTasks = new ArrayList<>();
 
     private final Map<Long, Integer> catColors = new HashMap<>();
     private long currentDayStart;
@@ -70,9 +72,31 @@ public class CalendarActivity extends AppCompatActivity {
         taskDao.getAll().observe(this, tasks -> {
             if (tasks == null) tasks = new ArrayList<>();
             prepareCalendarData(tasks);
+            lastTasks = tasks;
+            prepareCalendarData(lastTasks);
+
+            CalendarDay sel = b.mcal.getSelectedDate();
+            if (sel == null) sel = CalendarDay.today();
 
             long today = startOfDay(System.currentTimeMillis());
             dayAdapter.submit(byDay.getOrDefault(today, new ArrayList<>()));
+        });
+
+        AppDatabase.get(this).categoryDao().all().observe(this, list -> {
+            catColors.clear();
+            if (list != null) {
+                for (CategoryEntity c : list) {
+                    int color = (c.colorHex != null && !c.colorHex.isEmpty())
+                            ? android.graphics.Color.parseColor(c.colorHex)
+                            : fallbackColorFor(c.id);
+                    catColors.put(c.id, color);
+                }
+            }
+            prepareCalendarData(lastTasks);
+            CalendarDay sel = b.mcal.getSelectedDate();
+            if (sel == null) sel = CalendarDay.today();
+            long ts = atStartOfDay(sel);
+            dayAdapter.submit(byDay.getOrDefault(ts, new ArrayList<>()));
         });
     }
 
@@ -90,7 +114,6 @@ public class CalendarActivity extends AppCompatActivity {
         loadCategoryColors();
 
         for (TaskEntity t : tasks) {
-            //if (!"ACTIVE".equals(t.status)) continue;
 
             if ("ONE_TIME".equals(t.kind)) {
                 if (t.scheduledAt != null) {
@@ -126,7 +149,7 @@ public class CalendarActivity extends AppCompatActivity {
             List<Integer> colors = new ArrayList<>();
             for (TaskEntity t : list) {
                 Integer c = catColors.get(t.categoryId);
-                if (c == null) c = 0xFF9E9E9E; // default siva
+                if (c == null) c = 0xFF9E9E9E;
                 if (!colors.contains(c)) {
                     colors.add(c);
                     if (colors.size() == 3) break;
@@ -235,10 +258,6 @@ public class CalendarActivity extends AppCompatActivity {
     private void updateStatusAndRefresh(long id, String action) {
         AppDatabase.get(this).taskDao().updateStatus(id, action);
 
-        /*CalendarDay sel = b.mcal.getSelectedDate();
-        if (sel == null) sel = CalendarDay.today();
-        long ts = atStartOfDay(sel);
-        List<TaskEntity> list = byDay.getOrDefault(ts, new ArrayList<>());
-        dayAdapter.submit(list);*/
+
     }
 }

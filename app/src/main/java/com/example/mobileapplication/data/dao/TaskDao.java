@@ -98,31 +98,6 @@ WHERE id=:id AND kind='RECURRING' AND status!='CANCELED'
 """)
     int cancelRecurringFromNow(long id, long endAt);
 
-
-    @Query("""
-UPDATE tasks SET 
- title=:title,
- description=:description,
- categoryId=:categoryId,
- kind=:kind,
- scheduledAt=:scheduledAt,
- repeatEvery=:repeatEvery,
- repeatUnit=:repeatUnit,
- repeatStartAt=:repeatStartAt,
- repeatEndAt=:repeatEndAt,
- weightXp=:weightXp,
- importanceXp=:importanceXp,
- totalXp=:totalXp
-WHERE id=:id
-""")
-    void updateCore(long id,
-                    String title, String description, long categoryId,
-                    String kind, Long scheduledAt,
-                    Integer repeatEvery, String repeatUnit, Long repeatStartAt, Long repeatEndAt,
-                    int weightXp, int importanceXp, int totalXp);
-
-
-
     @Query("""
 UPDATE tasks SET status='DONE'
 WHERE id=:id AND kind='ONE_TIME' AND status='ACTIVE'
@@ -135,7 +110,6 @@ WHERE id=:id AND kind='ONE_TIME' AND status='ACTIVE'
     @Query("UPDATE tasks SET status='CANCELED' WHERE id=:id AND status='ACTIVE'")
     int markCanceled(long id);
 
-    // RECURRING -> PAUSED (samo iz ACTIVE)
     @Query("UPDATE tasks SET status='PAUSED' WHERE id=:id AND kind='RECURRING' AND status='ACTIVE'")
     int pauseRecurring(long id);
 
@@ -154,6 +128,26 @@ WHERE kind='ONE_TIME' AND status='ACTIVE'
 
     @Query("SELECT COUNT(*) FROM tasks")
     int getTotalTasks();
+    @Query("""
+SELECT COUNT(*) FROM tasks
+WHERE status='DONE'
+  AND (
+        (kind='ONE_TIME'  AND scheduledAt BETWEEN :start AND :end)
+     OR (kind='RECURRING' AND repeatStartAt <= :end AND (repeatEndAt IS NULL OR repeatEndAt >= :start))
+  )
+""")
+    int doneCount(long start, long end);
+
+    @Query("""
+SELECT COUNT(*) FROM tasks
+WHERE status IN ('ACTIVE','DONE','NOT_DONE')
+  AND (
+        (kind='ONE_TIME' AND scheduledAt BETWEEN :start AND :end)
+     OR (kind='RECURRING' AND repeatStartAt <= :end AND (repeatEndAt IS NULL OR repeatEndAt >= :start))
+  )
+""")
+    int eligibleCount(long start, long end);
+
 
 
 }
