@@ -31,7 +31,7 @@ public class TaskListViewModel extends AndroidViewModel {
         tasks = taskDao.getAll();
 
         AppDatabase.exec(() -> {
-            long limit = startOfDay(System.currentTimeMillis()) - 3L*24*60*60*1000; // pre 3 dana 00:00
+            long limit = startOfDay(System.currentTimeMillis()) - 3L*24*60*60*1000; 
             AppDatabase.get(getApplication()).taskDao().sweepOverdueToNotDone(limit);
         });
 

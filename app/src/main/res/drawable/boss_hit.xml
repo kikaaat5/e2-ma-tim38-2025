@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <size android:width="220dp" android:height="220dp"/>
+    <solid android:color="#E53935"/> <!-- crveni "hit" efekat -->
+    <stroke android:width="2dp" android:color="#202020"/>
+</shape>
