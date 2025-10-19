@@ -1,0 +1,16 @@
+<!-- app/src/main/res/menu/menu_task_list.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_categories"
+        android:title="Kategorije"
+        android:icon="@android:drawable/ic_menu_manage"
+
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_boss_test"
+        android:title="Test borbe sa bosom"
+        app:showAsAction="never" />
+</menu>

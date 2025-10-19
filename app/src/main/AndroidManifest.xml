@@ -3,23 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
     <application
+        android:name=".MobileApplication"
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileApplication" >
-        <activity
-            android:name=".MainActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
+
+        <activity android:name=".ui.tasks.CreateTaskActivity" android:exported="false" />
+        <activity android:name=".ui.tasks.TaskDetailActivity"/>
+        <activity android:name=".ui.tasks.CalendarActivity"/>
+        <activity android:name=".ui.tasks.TaskListActivity" android:exported="true"/>
+        <activity android:name=".ui.HomeActivity" android:exported="true" />
+        <activity android:name=".ui.auth.RegisterActivity" android:exported="false" />
+        <activity android:name=".ui.profile.ProfileActivity" android:exported="false" />
+        <activity android:name=".ui.profile.StatisticsActivity" android:exported="false" />
+        <activity android:name=".ui.tasks.CategoryListActivity" />
+        <activity android:name=".ui.boss.BossFightActivity" android:exported="false" />
+        <activity android:name=".ui.auth.LoginActivity" android:exported="true">
+           <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+
+
     </application>
+
 
 </manifest>
