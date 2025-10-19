@@ -1,6 +1,8 @@
 package com.example.mobileapplication.ui.viewModel;
 
 import android.app.Application;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -11,6 +13,11 @@ import com.example.mobileapplication.data.repository.TaskRepository;
 import com.example.mobileapplication.domain.services.ITaskService;
 import com.example.mobileapplication.domain.serviceImpl.TaskServiceImpl;
 import com.example.mobileapplication.data.models.TaskModels;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateTaskViewModel extends ViewModel {
     private final ITaskService createTask;
@@ -57,7 +64,35 @@ public class CreateTaskViewModel extends ViewModel {
         } else {
             e.createdAt = System.currentTimeMillis();
             e.status = "ACTIVE";
-            return dao.insert(e);
+            long newId = dao.insert(e);
+
+            // ✅ Firestore sinhronizacija
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+            if (auth.getCurrentUser() != null) {
+                String uid = auth.getCurrentUser().getUid();
+                Map<String, Object> firebaseTask = new HashMap<>();
+                firebaseTask.put("id", newId);
+                firebaseTask.put("userId", uid);
+                firebaseTask.put("title", e.title);
+                firebaseTask.put("description", e.description);
+                firebaseTask.put("categoryId", e.categoryId);
+                firebaseTask.put("kind", e.kind);
+                firebaseTask.put("status", e.status);
+                firebaseTask.put("totalXp", e.totalXp);
+                firebaseTask.put("createdAt", e.createdAt);
+
+                firestore.collection("tasks")
+                        .document(uid + "_" + newId)
+                        .set(firebaseTask)
+                        .addOnSuccessListener(aVoid ->
+                                Log.d("FirebaseTask", "✅ Task sinhronizovan u Firestore"))
+                        .addOnFailureListener(ex ->
+                                Log.e("FirebaseTask", "❌ Greška pri sinhronizaciji: " + ex.getMessage()));
+            }
+
+            return newId;
         }
 
     }

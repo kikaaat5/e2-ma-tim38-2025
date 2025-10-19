@@ -28,10 +28,43 @@ public final class TaskRepository {
         this.catDao = catDao;
     }
 
-    public long create(TaskModels.TaskDraft d){
+    public long create(TaskModels.TaskDraft d) {
         validate(d);
         TaskEntity e = toEntity(d);
         long newId = taskDao.insert(e);
+
+        Log.d("FirebaseTask", "Test: currentUser = " + auth.getCurrentUser());
+        if (auth.getCurrentUser() != null) {
+            String uid = auth.getCurrentUser().getUid();
+
+            Map<String, Object> firebaseTask = new HashMap<>();
+            firebaseTask.put("localId", newId);
+            firebaseTask.put("userId", uid);
+            firebaseTask.put("title", e.title);
+            firebaseTask.put("description", e.description);
+            firebaseTask.put("categoryId", e.categoryId);
+            firebaseTask.put("kind", e.kind);
+            firebaseTask.put("status", e.status);
+            firebaseTask.put("totalXp", e.totalXp);
+            firebaseTask.put("createdAt", e.createdAt);
+
+            firestore.collection("tasks")
+                    .document(uid + "_" + newId)
+                    .set(firebaseTask)
+                    .addOnSuccessListener(aVoid ->
+                            Log.d("FirebaseTask", "✅ Task sinhronizovan u Firestore"))
+                    .addOnFailureListener(e1 ->
+                            Log.e("FirebaseTask", "❌ Greška pri slanju u Firestore: " + e1.getMessage()));
+        } else {
+            Log.w("FirebaseTask", "⚠️ Nema ulogovanog korisnika, task nije poslat u Firebase");
+        }
+
+        return newId;
+    }
+//    public long create(TaskModels.TaskDraft d){
+//        validate(d);
+//        TaskEntity e = toEntity(d);
+//        long newId = taskDao.insert(e);
 
 //         MOCKED DATA: ostaviti do odbrane
 //        if (auth.getCurrentUser() != null) {
@@ -55,9 +88,9 @@ public final class TaskRepository {
 //                    .addOnFailureListener(e1 ->
 //                            Log.e("FirebaseTask", " Greška pri slanju u Firestore: " + e1.getMessage()));
 //        }
-
-        return newId;
-    }
+//
+//        return newId;
+//    }
 
     private void validate(TaskModels.TaskDraft d){
         if (d.title == null || d.title.trim().isEmpty())
