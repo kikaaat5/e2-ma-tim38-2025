@@ -29,16 +29,16 @@ public class UserRepository {
                         // 🔹 Snimi korisnika u Firestore
                         db.collection("users").document(uid).set(user)
                                 .addOnSuccessListener(aVoid -> {
-                                    Log.d("Firebase", "✅ Korisnik sačuvan u Firestore");
+                                    Log.d("Firebase", " Korisnik sačuvan u Firestore");
                                     // Pozovi listener TEK nakon uspešnog snimanja
                                     listener.onComplete(task);
                                 })
                                 .addOnFailureListener(e -> {
-                                    Log.e("Firebase", "❌ Greška pri snimanju korisnika: " + e.getMessage());
+                                    Log.e("Firebase", " Greška pri snimanju korisnika: " + e.getMessage());
                                     listener.onComplete(task);
                                 });
                     } else {
-                        Log.e("Firebase", "❌ Registracija neuspešna: " + task.getException().getMessage());
+                        Log.e("Firebase", " Registracija neuspešna: " + task.getException().getMessage());
                         listener.onComplete(task);
                     }
                 });
@@ -70,9 +70,9 @@ public class UserRepository {
         db.collection("users").document(user.getId())
                 .set(user)
                 .addOnSuccessListener(aVoid ->
-                        Log.d("Firebase", "✅ Korisnik uspešno ažuriran"))
+                        Log.d("Firebase", " Korisnik uspešno ažuriran"))
                 .addOnFailureListener(e ->
-                        Log.e("Firebase", "❌ Greška pri ažuriranju korisnika: " + e.getMessage()));
+                        Log.e("Firebase", " Greška pri ažuriranju korisnika: " + e.getMessage()));
     }
 
     public void getUserById(String uid, OnCompleteListener<DocumentSnapshot> listener) {

@@ -9,45 +9,100 @@ public class StatisticsModel {
     private int completedTasks;
     private int uncompletedTasks;
     private int canceledTasks;
-    private Map<String, Integer> tasksByCategory; // npr. "zdravlje" → 10
-    private Map<String, Integer> xpByDay; // npr. "Ponedeljak" → 50
+    private Map<String, Integer> tasksByCategory;
+    private Map<String, Integer> xpByDay;
     private int startedMissions;
     private int finishedMissions;
-    private Map<String, Integer> avgDifficultyXp; // npr. "Lako"→100, "Srednje"→150, "Teško"→300
+    private Map<String, Integer> avgDifficultyXp;
 
-    public StatisticsModel() {}
+    public StatisticsModel() {
+    }
 
-    // Getteri i setteri
-    public int getActiveDays() { return activeDays; }
-    public void setActiveDays(int activeDays) { this.activeDays = activeDays; }
+    public int getActiveDays() {
+        return activeDays;
+    }
 
-    public int getLongestStreak() { return longestStreak; }
-    public void setLongestStreak(int longestStreak) { this.longestStreak = longestStreak; }
+    public void setActiveDays(int activeDays) {
+        this.activeDays = activeDays;
+    }
 
-    public int getCreatedTasks() { return createdTasks; }
-    public void setCreatedTasks(int createdTasks) { this.createdTasks = createdTasks; }
+    public int getLongestStreak() {
+        return longestStreak;
+    }
 
-    public int getCompletedTasks() { return completedTasks; }
-    public void setCompletedTasks(int completedTasks) { this.completedTasks = completedTasks; }
+    public void setLongestStreak(int longestStreak) {
+        this.longestStreak = longestStreak;
+    }
 
-    public int getUncompletedTasks() { return uncompletedTasks; }
-    public void setUncompletedTasks(int uncompletedTasks) { this.uncompletedTasks = uncompletedTasks; }
+    public int getCreatedTasks() {
+        return createdTasks;
+    }
 
-    public int getCanceledTasks() { return canceledTasks; }
-    public void setCanceledTasks(int canceledTasks) { this.canceledTasks = canceledTasks; }
+    public void setCreatedTasks(int createdTasks) {
+        this.createdTasks = createdTasks;
+    }
 
-    public Map<String, Integer> getTasksByCategory() { return tasksByCategory; }
-    public void setTasksByCategory(Map<String, Integer> tasksByCategory) { this.tasksByCategory = tasksByCategory; }
+    public int getCompletedTasks() {
+        return completedTasks;
+    }
 
-    public Map<String, Integer> getXpByDay() { return xpByDay; }
-    public void setXpByDay(Map<String, Integer> xpByDay) { this.xpByDay = xpByDay; }
+    public void setCompletedTasks(int completedTasks) {
+        this.completedTasks = completedTasks;
+    }
 
-    public int getStartedMissions() { return startedMissions; }
-    public void setStartedMissions(int startedMissions) { this.startedMissions = startedMissions; }
+    public int getUncompletedTasks() {
+        return uncompletedTasks;
+    }
 
-    public int getFinishedMissions() { return finishedMissions; }
-    public void setFinishedMissions(int finishedMissions) { this.finishedMissions = finishedMissions; }
+    public void setUncompletedTasks(int uncompletedTasks) {
+        this.uncompletedTasks = uncompletedTasks;
+    }
 
-    public Map<String, Integer> getAvgDifficultyXp() { return avgDifficultyXp; }
-    public void setAvgDifficultyXp(Map<String, Integer> avgDifficultyXp) { this.avgDifficultyXp = avgDifficultyXp; }
+    public int getCanceledTasks() {
+        return canceledTasks;
+    }
+
+    public void setCanceledTasks(int canceledTasks) {
+        this.canceledTasks = canceledTasks;
+    }
+
+    public Map<String, Integer> getTasksByCategory() {
+        return tasksByCategory;
+    }
+
+    public void setTasksByCategory(Map<String, Integer> tasksByCategory) {
+        this.tasksByCategory = tasksByCategory;
+    }
+
+    public Map<String, Integer> getXpByDay() {
+        return xpByDay;
+    }
+
+    public void setXpByDay(Map<String, Integer> xpByDay) {
+        this.xpByDay = xpByDay;
+    }
+
+    public int getStartedMissions() {
+        return startedMissions;
+    }
+
+    public void setStartedMissions(int startedMissions) {
+        this.startedMissions = startedMissions;
+    }
+
+    public int getFinishedMissions() {
+        return finishedMissions;
+    }
+
+    public void setFinishedMissions(int finishedMissions) {
+        this.finishedMissions = finishedMissions;
+    }
+
+    public Map<String, Integer> getAvgDifficultyXp() {
+        return avgDifficultyXp;
+    }
+
+    public void setAvgDifficultyXp(Map<String, Integer> avgDifficultyXp) {
+        this.avgDifficultyXp = avgDifficultyXp;
+    }
 }

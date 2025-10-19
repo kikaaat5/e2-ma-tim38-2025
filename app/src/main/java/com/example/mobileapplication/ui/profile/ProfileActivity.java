@@ -79,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("Profile", "❌ Greška pri učitavanju profila: " + e.getMessage());
+                    Log.e("Profile", " Greška pri učitavanju profila: " + e.getMessage());
                     Toast.makeText(this, "Greška pri učitavanju profila", Toast.LENGTH_SHORT).show();
                 });
     }

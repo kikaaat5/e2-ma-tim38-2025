@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
 
-        <!-- Naslov -->
         <TextView
             android:text="📊 Statistika korisnika"
             android:textColor="#FFFFFF"
@@ -22,7 +21,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <!-- Sekcija sa osnovnim informacijama -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +59,6 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <!-- Donut chart za zadatke -->
         <TextView
             android:text="✅ Statistika zadataka"
             android:textColor="#FFFFFF"
@@ -78,7 +75,6 @@
             android:layout_marginBottom="24dp"
             android:background="#1E1E1E" />
 
-        <!-- Bar chart za kategorije -->
         <TextView
             android:text="📚 Zadaci po kategorijama"
             android:textColor="#FFFFFF"
@@ -95,7 +91,6 @@
             android:layout_marginBottom="24dp"
             android:background="#1E1E1E" />
 
-        <!-- Line chart prosečne težine -->
         <TextView
             android:text="⚖️ Prosečna XP po težini"
             android:textColor="#FFFFFF"
@@ -112,7 +107,6 @@
             android:layout_marginBottom="24dp"
             android:background="#1E1E1E" />
 
-        <!-- Line chart XP napretka -->
         <TextView
             android:text="📈 XP poslednjih 7 dana"
             android:textColor="#FFFFFF"

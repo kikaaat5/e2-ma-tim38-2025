@@ -20,6 +20,7 @@ public class StatisticsRepository {
         auth = FirebaseAuth.getInstance();
     }
 
+    //TODO:
     // Ovo bi čitalo više kolekcija iz Firestore-a u pravoj implementaciji.
     // Za sada vraćamo simulirane podatke kao Task<StatisticModel>.
     public Task<StatisticsModel> loadStatistics() {

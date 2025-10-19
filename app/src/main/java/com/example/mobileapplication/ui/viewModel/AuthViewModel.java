@@ -48,7 +48,7 @@ public class AuthViewModel extends ViewModel {
             } else {
                 Exception e = task.getException();
                 errorMessage.postValue(
-                        e != null ? "❌ Registracija neuspešna: " + e.getMessage() : "❌ Registracija neuspešna."
+                        e != null ? " Registracija neuspešna: " + e.getMessage() : "Registracija neuspešna."
                 );
                 registrationSuccess.postValue(false);
             }

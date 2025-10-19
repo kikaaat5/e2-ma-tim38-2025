@@ -7,7 +7,6 @@
     android:padding="24dp"
     tools:context=".ui.HomeActivity">
 
-    <!-- 🔹 Logout link u gornjem levom uglu -->
     <TextView
         android:id="@+id/tvLogout"
         android:text="Odjavi se"
@@ -22,7 +21,6 @@
         android:layout_height="20dp"
         android:layout_width="100dp"/>
 
-    <!-- 🔹 Glavni naslov -->
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="300dp"
@@ -34,7 +32,6 @@
         android:textSize="22sp"
         android:textStyle="bold" />
 
-    <!-- 🔹 Meni dugmad -->
     <LinearLayout
         android:id="@+id/menuContainer"
         android:orientation="vertical"
