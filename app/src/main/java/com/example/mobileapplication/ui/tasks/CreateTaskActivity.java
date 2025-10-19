@@ -2,12 +2,16 @@ package com.example.mobileapplication.ui.tasks;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -36,6 +40,26 @@ private TaskDao dao;
 
     public static final String EXTRA_TASK_ID = "EXTRA_TASK_ID";
 
+
+    private final ActivityResultLauncher<Intent> pickCategoryLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), res -> {
+                if (res.getResultCode() == RESULT_OK && res.getData() != null) {
+                    Intent data = res.getData();
+                    selectedCategoryId = data.getLongExtra(CategoryListActivity.EXTRA_RESULT_ID, -1L);
+                    String name  = data.getStringExtra(CategoryListActivity.EXTRA_RESULT_NAME);
+                    String color = data.getStringExtra(CategoryListActivity.EXTRA_RESULT_COLOR);
+
+                    b.chCategory.setText(name == null ? "Kategorija" : name);
+                    try {
+                        if (color != null && !color.isEmpty()) {
+                            b.chCategory.setChipBackgroundColor(
+                                    ColorStateList.valueOf(android.graphics.Color.parseColor(color)));
+                        }
+                    } catch (Exception ignore) {}
+                }
+            });
+
+
     public static void startEdit(android.content.Context ctx, long taskId){
         android.content.Intent i = new android.content.Intent(ctx, CreateTaskActivity.class);
         i.putExtra(EXTRA_TASK_ID, taskId);
@@ -46,6 +70,13 @@ private TaskDao dao;
         super.onCreate(savedInstanceState);
         b = ActivityCreateTaskBinding.inflate(getLayoutInflater());
         setContentView(b.getRoot());
+
+        b.chCategory.setOnClickListener(v -> {
+            Intent i = new Intent(this, CategoryListActivity.class);
+            i.putExtra(CategoryListActivity.EXTRA_PICK_MODE, true);
+            pickCategoryLauncher.launch(i);
+        });
+
 
         vm = new ViewModelProvider(
                 this,
@@ -61,6 +92,22 @@ private TaskDao dao;
                 b.etTitle.setText(t.title);
                 b.etDesc.setText(t.description);
                 selectedCategoryId = t.categoryId;
+
+                AppDatabase.get(this).categoryDao().all().observe(this, list -> {
+                    if (list == null) return;
+                    for (CategoryEntity c : list) {
+                        if (c.id == selectedCategoryId) {
+                            b.chCategory.setText(c.name);
+                            try {
+                                if (c.colorHex != null && !c.colorHex.isEmpty()) {
+                                    b.chCategory.setChipBackgroundColor(
+                                            ColorStateList.valueOf(android.graphics.Color.parseColor(c.colorHex)));
+                                }
+                            } catch (Exception ignore) {}
+                            break;
+                        }
+                    }
+                });
 
                 boolean isRecurring = "RECURRING".equals(t.kind);
                 b.swRecurring.setChecked(isRecurring);
@@ -88,27 +135,21 @@ private TaskDao dao;
                         b.etRepeatEnd.setTag(t.repeatEndAt);
                     }
                 }
-                //long id = vm.save(t, editId);
-               // b.btnSave.setOnClickListener(v -> onEdit(t, editId) );
 
             });
 
 
-            //b.btnSave.setOnClickListener(v -> onEdit(t, editId) );
         }
 
 
             new Thread(() -> {
                 try {
-                    if (AppDatabase.get(this).categoryDao().count() < 2) {
+                    if (AppDatabase.get(this).categoryDao().count() < 1) {
                         CategoryEntity c = new CategoryEntity();
                         c.name = "General";
                         c.colorHex = "#9E9E9E";
                         AppDatabase.get(this).categoryDao().insert(c);
-                        CategoryEntity c1 = new CategoryEntity();
-                        c.name = "Sport";
-                        c.colorHex = "#9E9E9E";
-                        AppDatabase.get(this).categoryDao().insert(c1);
+
                     }
                 } catch (Exception ignored) {
                 }
@@ -219,13 +260,6 @@ private TaskDao dao;
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-
-
-    /*private void onEdit(TaskEntity t, long id){
-    long newid = vm.edit(t, id);
-    Toast.makeText(this, "Izmijenjeno. ID=" + id, Toast.LENGTH_LONG).show();
-    finish();
-    }*/
 
     private void onSave(long editId) {
         try {

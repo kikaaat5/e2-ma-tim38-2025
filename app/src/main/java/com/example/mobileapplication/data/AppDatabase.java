@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 
 @Database(
         entities = { TaskEntity.class, CategoryEntity.class },
-        version = 2,
+        version = 3,
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {

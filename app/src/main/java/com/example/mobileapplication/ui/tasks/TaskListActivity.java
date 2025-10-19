@@ -2,14 +2,21 @@ package com.example.mobileapplication.ui.tasks;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.mobileapplication.R;
 import com.example.mobileapplication.data.models.TaskEntity;
 import com.example.mobileapplication.databinding.ActivityTaskListBinding;
 import com.example.mobileapplication.ui.viewModel.TaskListViewModel;
+
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +36,18 @@ public class TaskListActivity extends AppCompatActivity {
         binding = ActivityTaskListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
+
+        if (binding.toolbar.getMenu().size() == 0) {
+            binding.toolbar.inflateMenu(R.menu.menu_task_list);
+        }
+
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_categories) {
+                startActivity(new Intent(this, CategoryListActivity.class));
+                return true;
+            }
+            return false;
+        });
 
         adapter = new TaskListAdapter(
 
@@ -46,7 +64,7 @@ public class TaskListActivity extends AppCompatActivity {
 
         vm = new ViewModelProvider(this).get(TaskListViewModel.class);
 
-        vm.getTasks().observe(this, entities -> {      // ili vm.getTasks() ako želiš baš sve
+        vm.getTasks().observe(this, entities -> {
             cacheOneTime.clear();
             cacheRecurring.clear();
 
@@ -63,9 +81,8 @@ public class TaskListActivity extends AppCompatActivity {
                             cacheOneTime.add(it);
                         }
                     } else if ("RECURRING".equals(e.kind)) {
-                        Long end   = e.repeatEndAt; // may be null (open-ended)
+                        Long end   = e.repeatEndAt;
 
-                        // Show only if series still spans today (start <= today <= end|∞)
                         if (end == null || end >= today0) {
                             cacheRecurring.add(it);
                         }
@@ -97,7 +114,42 @@ public class TaskListActivity extends AppCompatActivity {
                 startActivity(new Intent(this, CreateTaskActivity.class)));
 
 
+        binding.fabCat.setOnClickListener(v ->
+                startActivity(new Intent(this, CategoryListActivity.class)));
+
+        binding.fabBossTest.setOnClickListener(v ->
+                startActivity(new Intent(this, com.example.mobileapplication.ui.boss.BossFightActivity.class))
+        );
+
+
+
+
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_task_list, menu);
+        Toast.makeText(this, "Meni inflatovan", Toast.LENGTH_SHORT).show();
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_categories) {
+            Toast.makeText(this, "Klik: Kategorije", Toast.LENGTH_SHORT).show();
+
+            startActivity(new Intent(this, CategoryListActivity.class));
+            return true;
+        }
+
+        if (item.getItemId() == R.id.action_boss_test) {
+            startActivity(new Intent(this, com.example.mobileapplication.ui.boss.BossFightActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private long startOfToday(long ts){
         java.util.Calendar c = java.util.Calendar.getInstance();

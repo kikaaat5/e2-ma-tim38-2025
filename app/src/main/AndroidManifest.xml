@@ -12,13 +12,19 @@
         <activity android:name=".ui.tasks.CreateTaskActivity" android:exported="false" />
         <activity android:name=".ui.tasks.TaskDetailActivity"/>
         <activity android:name=".ui.tasks.CalendarActivity"/>
-        <activity android:name=".ui.tasks.TaskListActivity" android:exported="true"/>
-        <activity android:name=".ui.auth.LoginActivity" android:exported="true">
+        <activity android:name=".ui.tasks.CategoryListActivity" />
+        <activity
+            android:name=".ui.boss.BossFightActivity"
+            android:exported="false" />
+        <activity android:name=".ui.tasks.TaskListActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.auth.LoginActivity" android:exported="true"/>
+
+
 
 
 

@@ -1,4 +1,3 @@
-// ui/CategoryListViewModel.java
 package com.example.mobileapplication.ui.viewModel;
 
 import android.app.Application;
