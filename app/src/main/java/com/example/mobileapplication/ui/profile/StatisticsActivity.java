@@ -68,7 +68,13 @@ public class StatisticsActivity extends AppCompatActivity {
         entries.add(new PieEntry(stats.getCreatedTasks(), "Kreirani"));
 
         PieDataSet set = new PieDataSet(entries, "");
-        set.setColors(Color.GREEN, Color.RED, Color.GRAY, Color.CYAN);
+        set.setColors(
+                Color.parseColor("#A5B4FC"),
+                Color.parseColor("#C7D2FE"),
+                Color.parseColor("#818CF8"),
+                Color.parseColor("#93C5FD")
+        );
+
         PieData data = new PieData(set);
         data.setValueTextColor(Color.WHITE);
         chartTasks.setData(data);
@@ -83,7 +89,7 @@ public class StatisticsActivity extends AppCompatActivity {
             entries.add(new BarEntry(index++, entry.getValue()));
         }
         BarDataSet dataSet = new BarDataSet(entries, "Zadaci po kategorijama");
-        dataSet.setColor(Color.CYAN);
+        dataSet.setColor(Color.parseColor("#A5B4FC"));
         BarData data = new BarData(dataSet);
         chartCategories.setData(data);
         chartCategories.getDescription().setEnabled(false);
@@ -97,8 +103,8 @@ public class StatisticsActivity extends AppCompatActivity {
             entries.add(new Entry(index++, entry.getValue()));
         }
         LineDataSet dataSet = new LineDataSet(entries, "Prosečna XP po težini");
-        dataSet.setColor(Color.YELLOW);
-        dataSet.setCircleColor(Color.MAGENTA);
+        dataSet.setColor(Color.parseColor("#C7D2FE"));
+        dataSet.setCircleColor(Color.parseColor("#A5B4FC"));
         LineData data = new LineData(dataSet);
         chartDifficulty.setData(data);
         chartDifficulty.getDescription().setEnabled(false);
@@ -112,8 +118,8 @@ public class StatisticsActivity extends AppCompatActivity {
             entries.add(new Entry(i++, entry.getValue()));
         }
         LineDataSet dataSet = new LineDataSet(entries, "XP poslednjih 7 dana");
-        dataSet.setColor(Color.CYAN);
-        dataSet.setCircleColor(Color.WHITE);
+        dataSet.setColor(Color.parseColor("#93C5FD"));
+        dataSet.setCircleColor(Color.parseColor("#E0E7FF"));
         LineData data = new LineData(dataSet);
         chartXP.setData(data);
         chartXP.getDescription().setEnabled(false);

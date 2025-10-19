@@ -2,63 +2,123 @@ package com.example.mobileapplication.data.repository;
 
 import android.util.Log;
 
+import com.example.mobileapplication.data.dao.TaskDao;
+import com.example.mobileapplication.data.models.CategoryEntity;
 import com.example.mobileapplication.data.models.StatisticsModel;
+import com.example.mobileapplication.data.models.TaskEntity;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.android.gms.tasks.TaskCompletionSource;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class StatisticsRepository {
-    private final FirebaseFirestore db;
-    private final FirebaseAuth auth;
 
-    public StatisticsRepository() {
-        db = FirebaseFirestore.getInstance();
-        auth = FirebaseAuth.getInstance();
+    private final TaskRepository taskRepository;
+    private final TaskDao taskDao;
+
+    public StatisticsRepository(TaskRepository taskRepository, TaskDao taskDao) {
+        this.taskRepository = taskRepository;
+        this.taskDao = taskDao;
     }
 
-    //TODO:
-    // Ovo bi čitalo više kolekcija iz Firestore-a u pravoj implementaciji.
-    // Za sada vraćamo simulirane podatke kao Task<StatisticModel>.
     public Task<StatisticsModel> loadStatistics() {
-        StatisticsModel stats = new StatisticsModel();
+        TaskCompletionSource<StatisticsModel> tcs = new TaskCompletionSource<>();
 
-        stats.setActiveDays(34);
-        stats.setLongestStreak(12);
-        stats.setCreatedTasks(57);
-        stats.setCompletedTasks(42);
-        stats.setUncompletedTasks(10);
-        stats.setCanceledTasks(5);
+        new Thread(() -> {
+            try {
+                StatisticsModel stats = new StatisticsModel();
 
-        Map<String, Integer> categories = new HashMap<>();
-        categories.put("Zdravlje", 10);
-        categories.put("Učenje", 14);
-        categories.put("Hobiji", 5);
-        categories.put("Fizička aktivnost", 7);
-        stats.setTasksByCategory(categories);
+                List<TaskEntity> allTasks = taskDao.getAllTasksSync();
+                if (allTasks == null || allTasks.isEmpty()) {
+                    TaskEntity t1 = new TaskEntity();
+                    t1.title = "Zadatak 1";
+                    t1.totalXp = 120;
+                    t1.status = "DONE";
+                    t1.createdAt = System.currentTimeMillis();
 
-        Map<String, Integer> xpByDay = new HashMap<>();
-        xpByDay.put("Ponedeljak", 50);
-        xpByDay.put("Utorak", 90);
-        xpByDay.put("Sreda", 130);
-        xpByDay.put("Četvrtak", 160);
-        xpByDay.put("Petak", 200);
-        xpByDay.put("Subota", 250);
-        xpByDay.put("Nedelja", 270);
-        stats.setXpByDay(xpByDay);
+                    TaskEntity t2 = new TaskEntity();
+                    t2.title = "Zadatak 2";
+                    t2.totalXp = 80;
+                    t2.status = "CANCELLED";
+                    t2.createdAt = System.currentTimeMillis() - (2 * 24 * 60 * 60 * 1000);
 
-        stats.setStartedMissions(2);
-        stats.setFinishedMissions(1);
+                    TaskEntity t3 = new TaskEntity();
+                    t3.title = "Zadatak 3";
+                    t3.totalXp = 150;
+                    t3.status = "ACTIVE";
+                    t3.createdAt = System.currentTimeMillis() - (3 * 24 * 60 * 60 * 1000);
 
-        Map<String, Integer> difficulty = new HashMap<>();
-        difficulty.put("Lako", 80);
-        difficulty.put("Srednje", 120);
-        difficulty.put("Teško", 250);
-        stats.setAvgDifficultyXp(difficulty);
+                    taskDao.insert(t1);
+                    taskDao.insert(t2);
+                    taskDao.insert(t3);
 
-        return Tasks.forResult(stats);
+                    allTasks = taskDao.getAllTasksSync();
+                }
+                int completed = 0, active = 0, cancelled = 0;
+                for (TaskEntity t : allTasks) {
+                    switch (t.status) {
+                        case "DONE": completed++; break;
+                        case "CANCELLED": cancelled++; break;
+                        default: active++; break;
+                    }
+                }
+
+                stats.setCompletedTasks(completed);
+                stats.setUncompletedTasks(active);
+                stats.setCanceledTasks(cancelled);
+                stats.setCreatedTasks(allTasks.size());
+
+                Map<String, Integer> byCategory = new HashMap<>();
+                List<CategoryEntity> categories = taskRepository.getCategoriesWithTaskCount();
+                for (CategoryEntity c : categories) {
+                    byCategory.put(c.name, c.taskCount);
+                }
+                stats.setTasksByCategory(byCategory);
+
+                int easyXp = 0, mediumXp = 0, hardXp = 0;
+                for (TaskEntity t : allTasks) {
+                    int xp = t.totalXp;
+                    if (xp < 100) easyXp += xp;
+                    else if (xp < 200) mediumXp += xp;
+                    else hardXp += xp;
+                }
+                Map<String, Integer> xpByDiff = new HashMap<>();
+                xpByDiff.put("Laki", easyXp);
+                xpByDiff.put("Srednji", mediumXp);
+                xpByDiff.put("Teški", hardXp);
+                stats.setAvgDifficultyXp(xpByDiff);
+
+                Map<String, Integer> xpByDay = new HashMap<>();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.", Locale.getDefault());
+                long now = System.currentTimeMillis();
+                long sevenDaysAgo = now - (7L * 24 * 60 * 60 * 1000);
+
+                for (TaskEntity t : allTasks) {
+                    if (t.createdAt >= sevenDaysAgo) {
+                        String date = sdf.format(new Date(t.createdAt));
+                        int oldXp = xpByDay.getOrDefault(date, 0);
+                        xpByDay.put(date, oldXp + t.totalXp);
+                    }
+                }
+                stats.setXpByDay(xpByDay);
+
+                stats.setActiveDays(30);
+                stats.setLongestStreak(9);
+                stats.setStartedMissions(1);
+                stats.setFinishedMissions(3);
+
+                tcs.setResult(stats);
+            } catch (Exception e) {
+                Log.e("StatisticsRepository", " Greška pri izračunavanju statistike", e);
+                tcs.setException(e);
+            }
+        }).start();
+
+        return tcs.getTask();
     }
 }

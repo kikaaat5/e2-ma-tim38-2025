@@ -25,6 +25,27 @@ public interface TaskDao {
     @Query("DELETE FROM tasks WHERE id=:id")
     void delete(long id);
 
+    @Query("SELECT COUNT(*) FROM tasks WHERE status = 'DONE'")
+    int getCompletedCount();
+
+    @Query("SELECT COUNT(*) FROM tasks WHERE status = 'ACTIVE'")
+    int getActiveCount();
+
+    @Query("SELECT COUNT(*) FROM tasks WHERE status = 'CANCELLED'")
+    int getCancelledCount();
+
+    @Query("SELECT COUNT(*) FROM tasks")
+    int getTotalCount();
+
+    @Query("SELECT * FROM tasks")
+    List<TaskEntity> getAllTasksSync();
+
+    @Query("SELECT totalXp FROM tasks WHERE status = 'DONE'")
+    List<Integer> getCompletedXpValues();
+
+    @Query("SELECT createdAt FROM tasks ORDER BY createdAt DESC LIMIT 7")
+    List<Long> getRecentCreationDates();
+
     @Query("""
 UPDATE tasks SET
   title=:title,
@@ -68,7 +89,6 @@ WHERE id=:id AND kind='ONE_TIME'
 """)
     int deleteOneTime(long id, long now);
 
-    /** “Brisanje” ponavljajućeg = skraćivanje perioda tako da ostanu samo prošla pojavljivanja. */
     @Query("""
 UPDATE tasks SET
   repeatEndAt = CASE
@@ -102,7 +122,7 @@ WHERE id=:id
                     int weightXp, int importanceXp, int totalXp);
 
 
-    // Jednokratni -> DONE (samo ACTIVE, ne u budućnosti, najviše 3 dana unazad)
+
     @Query("""
 UPDATE tasks SET status='DONE'
 WHERE id=:id AND kind='ONE_TIME' AND status='ACTIVE'
@@ -112,7 +132,6 @@ WHERE id=:id AND kind='ONE_TIME' AND status='ACTIVE'
 """)
     int markDoneOneTime(long id, long now, long nowMinus3d);
 
-    // Globalno -> CANCELED (dozvoljeno samo iz ACTIVE)
     @Query("UPDATE tasks SET status='CANCELED' WHERE id=:id AND status='ACTIVE'")
     int markCanceled(long id);
 
@@ -120,11 +139,9 @@ WHERE id=:id AND kind='ONE_TIME' AND status='ACTIVE'
     @Query("UPDATE tasks SET status='PAUSED' WHERE id=:id AND kind='RECURRING' AND status='ACTIVE'")
     int pauseRecurring(long id);
 
-    // RECURRING -> ACTIVE (samo iz PAUSED)
     @Query("UPDATE tasks SET status='ACTIVE' WHERE id=:id AND kind='RECURRING' AND status='PAUSED'")
     int activateRecurring(long id);
 
-    // Svaki put kad uđemo u app/listu: sve jednokratne starije od 3 dana -> NOT_DONE
     @Query("""
 UPDATE tasks SET status='NOT_DONE'
 WHERE kind='ONE_TIME' AND status='ACTIVE'

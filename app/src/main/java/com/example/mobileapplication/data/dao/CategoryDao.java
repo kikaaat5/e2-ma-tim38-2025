@@ -21,4 +21,8 @@ public interface CategoryDao {
 
     @Query("SELECT COUNT(*) FROM categories")
     int count();
+
+    @Query("SELECT * FROM categories")
+    List<CategoryEntity> getAllCategoriesSync();
+
 }

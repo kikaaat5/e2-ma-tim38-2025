@@ -9,6 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileApplication" >
 
+
         <activity android:name=".ui.tasks.CreateTaskActivity" android:exported="false" />
         <activity android:name=".ui.tasks.TaskDetailActivity"/>
         <activity android:name=".ui.tasks.CalendarActivity"/>

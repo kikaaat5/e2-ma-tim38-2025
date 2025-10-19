@@ -6,8 +6,10 @@ import com.example.mobileapplication.data.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 
 public class UserRepository {
 
@@ -24,13 +26,11 @@ public class UserRepository {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         String uid = auth.getCurrentUser().getUid();
-                        user.setId(uid); // ako User ima polje id
+                        user.setId(uid);
 
-                        // 🔹 Snimi korisnika u Firestore
                         db.collection("users").document(uid).set(user)
                                 .addOnSuccessListener(aVoid -> {
                                     Log.d("Firebase", " Korisnik sačuvan u Firestore");
-                                    // Pozovi listener TEK nakon uspešnog snimanja
                                     listener.onComplete(task);
                                 })
                                 .addOnFailureListener(e -> {
@@ -60,8 +60,33 @@ public class UserRepository {
 
 
     public User getCurrentUser() {
-        // TODO: povezati sa Firebase-om
-        return null;
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+
+        if (firebaseUser == null) {
+            Log.w("UserRepository", "⚠️ Nema aktivnog korisnika (FirebaseAuth je null)");
+            return null;
+        }
+
+        User user = new User();
+        user.setId(firebaseUser.getUid());
+        user.setEmail(firebaseUser.getEmail());
+        user.setUsername(firebaseUser.getDisplayName() != null
+                ? firebaseUser.getDisplayName()
+                : firebaseUser.getEmail());
+        user.setAvatar("default_avatar");
+
+        db.collection("users").document(firebaseUser.getUid()).get()
+                .addOnSuccessListener((DocumentSnapshot doc) -> {
+                    if (doc.exists()) {
+                        if (doc.contains("username")) user.setUsername(doc.getString("username"));
+                        if (doc.contains("avatar")) user.setAvatar(doc.getString("avatar"));
+                        if (doc.contains("xp")) user.setXp(doc.getLong("xp") != null ? doc.getLong("xp").intValue() : 0);
+                        if (doc.contains("level")) user.setLevel(doc.getLong("level") != null ? doc.getLong("level").intValue() : 1);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("UserRepository", "❌ Greška pri čitanju Firestore usera: " + e.getMessage()));
+
+        return user;
     }
 
     public void updateUser(User user) {

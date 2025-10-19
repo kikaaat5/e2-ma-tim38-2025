@@ -43,6 +43,7 @@ dependencies {
     // Room
     implementation 'androidx.room:room-runtime:2.6.1'
     implementation libs.room.runtime
+    implementation libs.lifecycle.process
     //implementation libs.core.ktx
     annotationProcessor 'androidx.room:room-compiler:2.6.1'
 

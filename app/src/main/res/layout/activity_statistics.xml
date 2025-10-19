@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:background="#111016"
     android:padding="16dp"
     android:fillViewport="true">
 
@@ -14,7 +14,7 @@
 
         <TextView
             android:text="📊 Statistika korisnika"
-            android:textColor="#FFFFFF"
+            android:textColor="#E0E0FF"
             android:textStyle="bold"
             android:textSize="22sp"
             android:layout_marginBottom="16dp"
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#1E1E1E"
+            android:background="#1B1A2A"
             android:padding="16dp"
             android:layout_marginBottom="20dp"
             android:elevation="2dp"
@@ -35,7 +35,7 @@
             <TextView
                 android:id="@+id/tvDaysActive"
                 android:text="Aktivan: 0 dana"
-                android:textColor="#BB86FC"
+                android:textColor="#C9B6FF"
                 android:textSize="16sp"
                 android:layout_marginBottom="4dp"
                 android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
             <TextView
                 android:id="@+id/tvLongestStreak"
                 android:text="Najduži niz: 0 dana"
-                android:textColor="#BB86FC"
+                android:textColor="#B8A9FF"
                 android:textSize="16sp"
                 android:layout_marginBottom="4dp"
                 android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
             <TextView
                 android:id="@+id/tvSpecialMissions"
                 android:text="Specijalne misije: 0 / 0"
-                android:textColor="#BB86FC"
+                android:textColor="#A8C7FF"
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -61,7 +61,7 @@
 
         <TextView
             android:text="✅ Statistika zadataka"
-            android:textColor="#FFFFFF"
+            android:textColor="#DAD9FF"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_marginBottom="8dp"
@@ -73,11 +73,11 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginBottom="24dp"
-            android:background="#1E1E1E" />
+            android:background="#1C1B2E" />
 
         <TextView
             android:text="📚 Zadaci po kategorijama"
-            android:textColor="#FFFFFF"
+            android:textColor="#DAD9FF"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_marginBottom="8dp"
@@ -89,11 +89,11 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginBottom="24dp"
-            android:background="#1E1E1E" />
+            android:background="#1C1B2E" />
 
         <TextView
             android:text="⚖️ Prosečna XP po težini"
-            android:textColor="#FFFFFF"
+            android:textColor="#DAD9FF"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_marginBottom="8dp"
@@ -105,11 +105,11 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginBottom="24dp"
-            android:background="#1E1E1E" />
+            android:background="#1C1B2E" />
 
         <TextView
             android:text="📈 XP poslednjih 7 dana"
-            android:textColor="#FFFFFF"
+            android:textColor="#DAD9FF"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_marginBottom="8dp"
@@ -121,7 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginBottom="40dp"
-            android:background="#1E1E1E" />
+            android:background="#1C1B2E" />
 
     </LinearLayout>
 </ScrollView>
