@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
+
     private String id;
     private String email;
     private String username;
@@ -29,6 +30,14 @@ public class User implements Serializable {
     public User() {
     }
 
+    public User(String userId) {
+        this.id = userId;
+        this.level = 1;
+        this.xp = 0;
+        this.nextLevelXp = 200; // početni prag
+        this.pp = 0;
+        this.title = "Novajlija";
+    }
     public User(String id, String email, String username, String avatar) {
         this.id = id;
         this.email = email;

@@ -17,6 +17,7 @@ import com.example.mobileapplication.data.dao.TaskDao;
 import com.example.mobileapplication.data.models.TaskEntity;
 import com.example.mobileapplication.databinding.ActivityCalendarBinding;
 import com.example.mobileapplication.ui.tasks.helpers.EventDecorater;
+import com.google.firebase.auth.FirebaseAuth;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.ArrayList;
@@ -27,13 +28,13 @@ import java.util.Locale;
 import java.util.Map;
 
 public class CalendarActivity extends AppCompatActivity {
-
+    private static FirebaseAuth auth = FirebaseAuth.getInstance();
+    private static String userId = auth.getCurrentUser().getUid();
     private ActivityCalendarBinding b;
     private TaskDao taskDao;
 
     private DayTaskAdapter dayAdapter;
 
-    // CalendarActivity
     private List<TaskEntity> lastTasks = new ArrayList<>();
 
     private final Map<Long, Integer> catColors = new HashMap<>();
@@ -55,7 +56,7 @@ public class CalendarActivity extends AppCompatActivity {
 
                 (item, action) -> {
                     AppDatabase.exec(() -> {
-                        taskDao.updateStatus(item.id, action);
+                        taskDao.updateStatus(item.id, action, userId);
                         runOnUiThread(this::refreshForSelectedDay);
                     });
                 }
@@ -69,7 +70,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
 
-        taskDao.getAll().observe(this, tasks -> {
+        taskDao.getAll(userId).observe(this, tasks -> {
             if (tasks == null) tasks = new ArrayList<>();
             prepareCalendarData(tasks);
             lastTasks = tasks;
@@ -256,7 +257,7 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     private void updateStatusAndRefresh(long id, String action) {
-        AppDatabase.get(this).taskDao().updateStatus(id, action);
+        AppDatabase.get(this).taskDao().updateStatus(id, action,userId);
 
 
     }

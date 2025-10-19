@@ -5,7 +5,6 @@ import com.example.mobileapplication.data.models.User;
 
 public class LevelManager {
 
-
     private static int calculateNextLevelXp(int currentLevelXp) {
         double next = currentLevelXp * 2 + currentLevelXp / 2.0;
         return ((int) Math.ceil(next / 100.0)) * 100;
@@ -16,32 +15,6 @@ public class LevelManager {
         return (int) Math.round(previousPP + (3.0 / 4.0) * previousPP);
     }
 
-    private static int calculateNextXpValue(int previousXp) {
-        return (int) Math.round(previousXp + previousXp / 2.0);
-    }
-
-    public static void checkLevelUp(User user) {
-        while (user.getXp() >= user.getNextLevelXp()) {
-            int oldXp = user.getNextLevelXp();
-            user.setLevel(user.getLevel() + 1);
-            user.setXp(user.getXp() - oldXp);
-
-            int newNextLevelXp = calculateNextLevelXp(oldXp);
-            user.setNextLevelXp(newNextLevelXp);
-
-            int newPP = calculateNextPP(user.getPp());
-            user.setPp(newPP);
-
-            String newTitle = getTitleForLevel(user.getLevel());
-            user.setTitle(newTitle);
-
-            Log.d("LevelUp", "🎉 Novi nivo: " + user.getLevel() +
-                    ", XP za sledeći nivo: " + newNextLevelXp +
-                    ", PP: " + newPP +
-                    ", Titula: " + newTitle);
-        }
-    }
-
     private static String getTitleForLevel(int level) {
         switch (level) {
             case 1: return "Novajlija";
@@ -49,6 +22,23 @@ public class LevelManager {
             case 3: return "Heroj";
             case 4: return "Legenda";
             default: return "Vitez nivoa " + level;
+        }
+    }
+
+    public static void checkLevelUp(User user) {
+        while (user.getXp() >= user.getNextLevelXp()) {
+            int oldXp = user.getNextLevelXp();
+            user.setLevel(user.getLevel() + 1);
+            user.setXp(user.getXp() - oldXp);
+            user.setNextLevelXp(calculateNextLevelXp(oldXp));
+            user.setPp(calculateNextPP(user.getPp()));
+            user.setTitle(getTitleForLevel(user.getLevel()));
+
+            Log.d("LevelManager", "🎉 Novi nivo: " + user.getLevel()
+                    + " | XP: " + user.getXp()
+                    + " / " + user.getNextLevelXp()
+                    + " | PP: " + user.getPp()
+                    + " | Titula: " + user.getTitle());
         }
     }
 }
