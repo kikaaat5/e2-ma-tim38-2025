@@ -150,4 +150,10 @@ WHERE kind='ONE_TIME' AND status='ACTIVE'
 """)
     int sweepOverdueToNotDone(long limitTs);
 
+
+
+    @Query("SELECT COUNT(*) FROM tasks")
+    int getTotalTasks();
+
+
 }

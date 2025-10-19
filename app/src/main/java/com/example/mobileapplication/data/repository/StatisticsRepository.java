@@ -107,10 +107,10 @@ public class StatisticsRepository {
                 }
                 stats.setXpByDay(xpByDay);
 
-                stats.setActiveDays(30);
-                stats.setLongestStreak(9);
-                stats.setStartedMissions(1);
-                stats.setFinishedMissions(3);
+                stats.setActiveDays(taskDao.getTotalTasks() > 0 ? 7 : 0);
+                stats.setLongestStreak(completed > 0 ? 5 : 0);
+                stats.setStartedMissions(active);
+                stats.setFinishedMissions(completed);
 
                 tcs.setResult(stats);
             } catch (Exception e) {
