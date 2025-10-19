@@ -97,40 +97,7 @@ public class CreateTaskViewModel extends ViewModel {
 
     }
 
-    /*public long edit(TaskEntity d, long editId){
-        TaskEntity e = new TaskEntity();
-        var dao = db.taskDao();
 
-        e.title = d.title;
-        e.description = d.description;
-        e.categoryId = d.categoryId;
-        e.kind = d.kind;
-        e.scheduledAt = (e.kind.equals("ONE_TIME")) ? d.scheduledAt : null;
-        e.repeatEvery = (e.kind.equals("RECURRING")) ? d.repeatEvery : null;
-        e.repeatUnit = (e.kind.equals("RECURRING")) ? d.repeatUnit : null;
-        e.repeatStartAt = (e.kind.equals("RECURRING")) ? d.repeatStartAt : null;
-        e.repeatEndAt = (e.kind.equals("RECURRING")) ? d.repeatEndAt : null;
-        e.weightXp = d.weightXp;
-        e.importanceXp = d.importanceXp;
-        e.totalXp = e.weightXp + e.importanceXp;
-
-
-            if ("ONE_TIME".equals(e.kind)) {
-                long now = System.currentTimeMillis();
-                dao.updateOneTime(
-                        e.id, e.title, e.description, e.weightXp, e.importanceXp, e.totalXp,
-                        e.scheduledAt, now
-                );
-            } else {
-                long nowStart = startOfToday();
-                dao.updateRecurring(
-                        e.id, e.title, e.description,
-                        e.weightXp, e.importanceXp, e.totalXp,
-                        e.repeatEvery, e.repeatUnit, e.repeatStartAt, e.repeatEndAt, nowStart
-                );
-            }
-            return editId;
-    }*/
 
     private long startOfToday(){
         java.util.Calendar c = java.util.Calendar.getInstance();

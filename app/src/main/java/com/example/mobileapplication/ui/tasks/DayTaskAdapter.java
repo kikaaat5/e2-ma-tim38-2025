@@ -59,7 +59,6 @@ public class DayTaskAdapter extends RecyclerView.Adapter<DayTaskAdapter.VH> {
     @Override public void onBindViewHolder(@NonNull VH h, int pos) {
         TaskEntity it = items.get(pos);
         h.tvTitle.setText(it.title);
-        // prilagodi polje imenu iz TaskEntity (npr. scheduledAt)
         h.tvTime.setText(formatTs(it.scheduledAt));
 
         h.itemView.setOnClickListener(v -> { if (onItemClick != null) onItemClick.onClick(it); });
@@ -75,7 +74,6 @@ public class DayTaskAdapter extends RecyclerView.Adapter<DayTaskAdapter.VH> {
             super(v);
             tvTitle = v.findViewById(R.id.tvTitle);
             tvTime  = v.findViewById(R.id.tvTime);
-            // btnDone = v.findViewById(R.id.btnDone); ...
         }
     }
 

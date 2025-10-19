@@ -118,12 +118,10 @@ public class TaskDetailActivity extends AppCompatActivity {
         boolean isRecurring = "RECURRING".equals(current.kind);
         String st = current.status;
 
-        // Samo ACTIVE može Done/Cancel
         boolean canResolve = "ACTIVE".equals(st);
-        b.btnDone.setEnabled(canResolve && "ONE_TIME".equals(current.kind)); // vidi napomenu gore
+        b.btnDone.setEnabled(canResolve && "ONE_TIME".equals(current.kind));
         b.btnCancel.setEnabled(canResolve);
 
-        // Pause/Activate samo za RECURRING
         b.btnPause.setEnabled(isRecurring && "ACTIVE".equals(st));
         b.btnActivate.setEnabled(isRecurring && "PAUSED".equals(st));
 
@@ -180,14 +178,12 @@ public class TaskDetailActivity extends AppCompatActivity {
             if ("ONE_TIME".equals(current.kind)) {
                 rows = dao.markDoneOneTime(current.id, now, threeDaysAgo);
             } else {
-                // Za RECURRING imamo “seriju”, ne pojedinačno pojavljivanje.
-                // Minimalna implementacija: nije dozvoljeno “DONE” (po specifikaciji se DONE odnosi na izvršenje;
-                // ako želiš po-pojavljivanju, treba druga tabela instance).
+
                 rows = 0;
             }
             runOnUiThread(() -> {
                 if (rows > 0) {
-                    awardXp(xpFor(current));          // XP samo kad prođe validacija
+                    awardXp(xpFor(current));
                     toast("Označeno kao urađeno (+XP)");
                     finish();
                 } else {

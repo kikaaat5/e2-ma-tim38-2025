@@ -95,8 +95,6 @@ public final class TaskRepository {
     private void validate(TaskModels.TaskDraft d){
         if (d.title == null || d.title.trim().isEmpty())
             throw new IllegalArgumentException("Naziv je obavezan");
-        if (catDao.exists(d.categoryId)==0)
-            throw new IllegalArgumentException("Kategorija ne postoji");
 
         if (d.weight == null || d.importance == null)
             throw new IllegalArgumentException("Težina i bitnost su obavezni");
