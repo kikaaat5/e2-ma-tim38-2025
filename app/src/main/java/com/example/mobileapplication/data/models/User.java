@@ -10,7 +10,7 @@ public class User implements Serializable {
     private String username;
     private int xp;
     private int pp;
-    private int coins;
+    private int coins = 200;
     private String title;
     private String avatar;
     private int level = 1;
@@ -45,7 +45,6 @@ public class User implements Serializable {
         this.avatar = avatar;
         this.xp = 0;
         this.pp = 0;
-        this.coins = 0;
         this.title = "Novajlija";
 
     }

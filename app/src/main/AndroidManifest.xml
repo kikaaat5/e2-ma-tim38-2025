@@ -10,16 +10,18 @@
         android:theme="@style/Theme.MobileApplication" >
 
 
-        <activity android:name=".ui.tasks.CreateTaskActivity" android:exported="false" />
+        <activity android:name=".ui.tasks.CreateTaskActivity" android:exported="true" />
         <activity android:name=".ui.tasks.TaskDetailActivity"/>
         <activity android:name=".ui.tasks.CalendarActivity"/>
         <activity android:name=".ui.tasks.TaskListActivity" android:exported="true"/>
         <activity android:name=".ui.HomeActivity" android:exported="true" />
-        <activity android:name=".ui.auth.RegisterActivity" android:exported="false" />
-        <activity android:name=".ui.profile.ProfileActivity" android:exported="false" />
-        <activity android:name=".ui.profile.StatisticsActivity" android:exported="false" />
+        <activity android:name=".ui.auth.RegisterActivity" android:exported="true" />
+        <activity android:name=".ui.profile.ProfileActivity" android:exported="true" />
+        <activity android:name=".ui.profile.StatisticsActivity" android:exported="true" />
         <activity android:name=".ui.tasks.CategoryListActivity" />
-        <activity android:name=".ui.boss.BossFightActivity" android:exported="false" />
+        <activity android:name=".ui.boss.BossFightActivity" android:exported="true" />
+        <activity android:name=".ui.equipment.StoreActivity" android:exported="true"/>
+        <activity android:name=".ui.equipment.EquipmentInventoryActivity" android:exported="true"/>
         <activity android:name=".ui.auth.LoginActivity" android:exported="true">
            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

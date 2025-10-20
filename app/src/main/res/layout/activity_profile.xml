@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:textColor="@android:color/holo_blue_dark"
     android:padding="20dp">
 
     <LinearLayout
@@ -21,7 +21,6 @@
         <TextView
             android:id="@+id/tvUsername"
             android:text="Korisnik"
-            android:textColor="#FFFFFF"
             android:textSize="22sp"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -31,7 +30,6 @@
         <TextView
             android:id="@+id/tvTitle"
             android:text="Titula: Početnik"
-            android:textColor="#BB86FC"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +47,6 @@
         <TextView
             android:id="@+id/tvXP"
             android:text="XP: 0"
-            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp" />
@@ -57,7 +54,6 @@
         <TextView
             android:id="@+id/tvPP"
             android:text="PP: 0"
-            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp" />
@@ -65,7 +61,6 @@
         <TextView
             android:id="@+id/tvCoins"
             android:text="Novčići: 0"
-            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp" />
@@ -73,7 +68,6 @@
         <TextView
             android:id="@+id/tvBadges"
             android:text="Bedževi: 0"
-            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp" />
@@ -81,7 +75,6 @@
         <TextView
             android:id="@+id/tvEquipment"
             android:text="Oprema: Osnovna"
-            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp" />

@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.mobileapplication.R;
 import com.example.mobileapplication.data.models.User;
 import com.example.mobileapplication.ui.auth.LoginActivity;
+import com.example.mobileapplication.ui.equipment.EquipmentInventoryActivity;
+import com.example.mobileapplication.ui.equipment.StoreActivity;
 import com.example.mobileapplication.ui.profile.ProfileActivity;
 import com.example.mobileapplication.ui.profile.StatisticsActivity;
 import com.example.mobileapplication.ui.tasks.TaskListActivity;
@@ -22,7 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class HomeActivity extends AppCompatActivity {
 
     private ImageView ivAvatar;
-    private TextView tvUsername, tvTitle, tvLevel, tvXp, tvPp, tvLogout;
+    private TextView tvUsername, tvTitle, tvLevel, tvXp, tvPp, tvLogout, tvStore, tvEquipment;
     private ProgressBar progressXp;
 
     private FirebaseAuth auth;
@@ -44,6 +46,8 @@ public class HomeActivity extends AppCompatActivity {
         tvPp = findViewById(R.id.tvPp);
         progressXp = findViewById(R.id.progressXp);
         tvLogout = findViewById(R.id.tvLogout);
+        tvStore = findViewById(R.id.btnStore);
+        tvEquipment = findViewById(R.id.btnInventory);
 
         findViewById(R.id.btnTasks).setOnClickListener(v ->
                 startActivity(new Intent(this, TaskListActivity.class)));
@@ -51,6 +55,11 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(this, ProfileActivity.class)));
         findViewById(R.id.btnStats).setOnClickListener(v ->
                 startActivity(new Intent(this, StatisticsActivity.class)));
+        findViewById(R.id.btnStore).setOnClickListener(v ->
+                startActivity(new Intent(this, StoreActivity.class)));
+        findViewById(R.id.btnInventory).setOnClickListener(v ->
+                startActivity(new Intent(this, EquipmentInventoryActivity.class)));
+
 
         tvLogout.setOnClickListener(v -> {
             auth.signOut();
@@ -83,8 +92,7 @@ public class HomeActivity extends AppCompatActivity {
             progressXp.setMax(user.getNextLevelXp());
             progressXp.setProgress(user.getXp());
 
-            // ✅ Prikaz avatara iz drawable po imenu (npr. "avatar3")
-            if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+           if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
                 int resId = getResources().getIdentifier(
                         user.getAvatar(),  // npr. "avatar2"
                         "drawable",

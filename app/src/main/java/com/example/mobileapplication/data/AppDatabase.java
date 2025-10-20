@@ -9,15 +9,17 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.mobileapplication.data.dao.CategoryDao;
+import com.example.mobileapplication.data.dao.EquipmentDao;
 import com.example.mobileapplication.data.dao.TaskDao;
 import com.example.mobileapplication.data.models.CategoryEntity;
+import com.example.mobileapplication.data.models.EquipmentEntity;
 import com.example.mobileapplication.data.models.TaskEntity;
 
 import java.util.concurrent.Executors;
 
 @Database(
-        entities = { TaskEntity.class, CategoryEntity.class },
-        version =5,
+        entities = { TaskEntity.class, CategoryEntity.class, EquipmentEntity.class},
+        version =6,
         exportSchema = false
 )
 
@@ -26,6 +28,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract TaskDao taskDao();
     public abstract CategoryDao categoryDao();
+
+    public abstract EquipmentDao equipmentDao();
 
     private static volatile AppDatabase INSTANCE;
 

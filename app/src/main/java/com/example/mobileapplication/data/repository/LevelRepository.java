@@ -32,6 +32,7 @@ public class LevelRepository {
 
             int oldLevel = user.getLevel();
             user.setXp(user.getXp() + earnedXp);
+            user.setCoins((200));
 
             // ✅ Provera da li prelazi nivo
             LevelManager.checkLevelUp(user);
