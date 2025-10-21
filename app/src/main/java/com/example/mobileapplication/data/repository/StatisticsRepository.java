@@ -8,6 +8,7 @@ import com.example.mobileapplication.data.models.StatisticsModel;
 import com.example.mobileapplication.data.models.TaskEntity;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,6 +21,7 @@ public class StatisticsRepository {
 
     private final TaskRepository taskRepository;
     private final TaskDao taskDao;
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
 
     public StatisticsRepository(TaskRepository taskRepository, TaskDao taskDao) {
         this.taskRepository = taskRepository;
@@ -31,34 +33,45 @@ public class StatisticsRepository {
 
         new Thread(() -> {
             try {
+                String uid = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+                if (uid == null) {
+                    tcs.setResult(new StatisticsModel());
+                    return;
+                }
+
                 StatisticsModel stats = new StatisticsModel();
 
-                List<TaskEntity> allTasks = taskDao.getAllTasksSync();
-                if (allTasks == null || allTasks.isEmpty()) {
-                    TaskEntity t1 = new TaskEntity();
-                    t1.title = "Zadatak 1";
-                    t1.totalXp = 120;
-                    t1.status = "DONE";
-                    t1.createdAt = System.currentTimeMillis();
+                List<TaskEntity> allTasks = taskDao.getAllTasksSync(uid);
 
-                    TaskEntity t2 = new TaskEntity();
-                    t2.title = "Zadatak 2";
-                    t2.totalXp = 80;
-                    t2.status = "CANCELLED";
-                    t2.createdAt = System.currentTimeMillis() - (2 * 24 * 60 * 60 * 1000);
+//                if (allTasks == null || allTasks.isEmpty()) {
+//                    TaskEntity t1 = new TaskEntity();
+//                    t1.title = "Zadatak 1";
+//                    t1.totalXp = 120;
+//                    t1.status = "DONE";
+//                    t1.createdAt = System.currentTimeMillis();
+//                    t1.userId = uid;
+//
+//                    TaskEntity t2 = new TaskEntity();
+//                    t2.title = "Zadatak 2";
+//                    t2.totalXp = 80;
+//                    t2.status = "CANCELLED";
+//                    t2.createdAt = System.currentTimeMillis() - (2 * 24 * 60 * 60 * 1000);
+//                    t2.userId = uid;
+//
+//                    TaskEntity t3 = new TaskEntity();
+//                    t3.title = "Zadatak 3";
+//                    t3.totalXp = 150;
+//                    t3.status = "ACTIVE";
+//                    t3.createdAt = System.currentTimeMillis() - (3 * 24 * 60 * 60 * 1000);
+//                    t3.userId = uid;
+//
+//                    taskDao.insert(t1);
+//                    taskDao.insert(t2);
+//                    taskDao.insert(t3);
+//
+//                    allTasks = taskDao.getAllTasksSync(uid);
+//                }
 
-                    TaskEntity t3 = new TaskEntity();
-                    t3.title = "Zadatak 3";
-                    t3.totalXp = 150;
-                    t3.status = "ACTIVE";
-                    t3.createdAt = System.currentTimeMillis() - (3 * 24 * 60 * 60 * 1000);
-
-                    taskDao.insert(t1);
-                    taskDao.insert(t2);
-                    taskDao.insert(t3);
-
-                    allTasks = taskDao.getAllTasksSync();
-                }
                 int completed = 0, active = 0, cancelled = 0;
                 for (TaskEntity t : allTasks) {
                     switch (t.status) {
@@ -107,14 +120,15 @@ public class StatisticsRepository {
                 }
                 stats.setXpByDay(xpByDay);
 
-                stats.setActiveDays(taskDao.getTotalTasks() > 0 ? 7 : 0);
+                stats.setActiveDays(taskDao.getTotalTasks(uid) > 0 ? 7 : 0);
                 stats.setLongestStreak(completed > 0 ? 5 : 0);
                 stats.setStartedMissions(active);
                 stats.setFinishedMissions(completed);
 
                 tcs.setResult(stats);
+
             } catch (Exception e) {
-                Log.e("StatisticsRepository", " Greška pri izračunavanju statistike", e);
+                Log.e("StatisticsRepository", "Greška pri izračunavanju statistike", e);
                 tcs.setException(e);
             }
         }).start();

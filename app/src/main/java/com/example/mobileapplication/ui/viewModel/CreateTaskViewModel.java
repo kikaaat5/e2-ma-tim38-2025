@@ -31,6 +31,8 @@ public class CreateTaskViewModel extends ViewModel {
     public long save(TaskModels.TaskDraft d, long editId) {
         TaskEntity e = new TaskEntity();
         var dao = db.taskDao();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
 
         e.title = d.title;
         e.description = d.description;
@@ -44,20 +46,22 @@ public class CreateTaskViewModel extends ViewModel {
         e.weightXp = (d.weight != null ? d.weight.xp : 0);
         e.importanceXp = (d.importance != null ? d.importance.xp : 0);
         e.totalXp = e.weightXp + e.importanceXp;
+        e.userId = uid;
+
         if (editId>0) {
             e.id=editId;
             if ("ONE_TIME".equals(e.kind)) {
                 long now = System.currentTimeMillis();
                 dao.updateOneTime(
                         e.id, e.title, e.description, e.weightXp, e.importanceXp, e.totalXp,
-                        e.scheduledAt, now
+                        e.scheduledAt, now, e.userId
                 );
             } else {
                 long nowStart = startOfToday();
                 dao.updateRecurring(
                         e.id, e.title, e.description,
                         e.weightXp, e.importanceXp, e.totalXp,
-                        e.repeatEvery, e.repeatUnit, e.repeatStartAt, e.repeatEndAt, nowStart
+                        e.repeatEvery, e.repeatUnit, e.repeatStartAt, e.repeatEndAt, nowStart, e.userId
                 );
             }
             return editId;
@@ -67,11 +71,10 @@ public class CreateTaskViewModel extends ViewModel {
             long newId = dao.insert(e);
 
             // ✅ Firestore sinhronizacija
-            FirebaseAuth auth = FirebaseAuth.getInstance();
+
             FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
             if (auth.getCurrentUser() != null) {
-                String uid = auth.getCurrentUser().getUid();
                 Map<String, Object> firebaseTask = new HashMap<>();
                 firebaseTask.put("id", newId);
                 firebaseTask.put("userId", uid);
@@ -82,6 +85,7 @@ public class CreateTaskViewModel extends ViewModel {
                 firebaseTask.put("status", e.status);
                 firebaseTask.put("totalXp", e.totalXp);
                 firebaseTask.put("createdAt", e.createdAt);
+                firebaseTask.put("userId", uid);
 
                 firestore.collection("tasks")
                         .document(uid + "_" + newId)

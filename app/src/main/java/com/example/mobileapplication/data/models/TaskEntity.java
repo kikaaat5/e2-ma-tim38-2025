@@ -17,18 +17,20 @@ public class TaskEntity {
     public String kind;       // "ONE_TIME" | "RECURRING"
     public Long scheduledAt;  // ONE_TIME (millis)
 
-    // Recurrence:
+
     public Integer repeatEvery;   // null za ONE_TIME
     public String repeatUnit;     // "DAY" | "WEEK" (null za ONE_TIME)
     public Long repeatStartAt;    // inclusive
     public Long repeatEndAt;      // inclusive
 
-    // XP:
+
     public int weightXp;
     public int importanceXp;
     public int totalXp;
 
     public long createdAt;
+    @NonNull
+    public String userId;
 
     @NonNull
     public String status = "ACTIVE";

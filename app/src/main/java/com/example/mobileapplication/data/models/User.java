@@ -4,25 +4,40 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
+
     private String id;
     private String email;
     private String username;
-    private String avatarUrl;
     private int xp;
     private int pp;
-    private int coins;
+    private int coins = 200;
     private String title;
     private String avatar;
-
     private int level = 1;
-
     private int badges = 0;
+    private int nextLevelXp = 200;
+
+    public int getNextLevelXp() {
+        return nextLevelXp;
+    }
+
+    public void setNextLevelXp(int nextLevelXp) {
+        this.nextLevelXp = nextLevelXp;
+    }
 
     private String equipment = "Osnovna oprema";
 
     public User() {
     }
 
+    public User(String userId) {
+        this.id = userId;
+        this.level = 1;
+        this.xp = 0;
+        this.nextLevelXp = 200; // početni prag
+        this.pp = 0;
+        this.title = "Novajlija";
+    }
     public User(String id, String email, String username, String avatar) {
         this.id = id;
         this.email = email;
@@ -30,7 +45,6 @@ public class User implements Serializable {
         this.avatar = avatar;
         this.xp = 0;
         this.pp = 0;
-        this.coins = 0;
         this.title = "Novajlija";
 
     }

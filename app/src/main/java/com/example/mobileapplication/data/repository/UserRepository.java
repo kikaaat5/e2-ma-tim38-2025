@@ -49,6 +49,19 @@ public class UserRepository {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(listener);
     }
+    public void getUserCoins(String uid, OnCompleteListener<DocumentSnapshot> listener) {
+        db.collection("users").document(uid).get().addOnCompleteListener(listener);
+    }
+
+    // 🔹 Ažuriranje novčića u Firestore
+    public void updateUserCoins(String uid, int newCoins) {
+        db.collection("users").document(uid)
+                .update("coins", newCoins)
+                .addOnSuccessListener(aVoid ->
+                        Log.d("UserRepository", "💰 Coins ažurirani: " + newCoins))
+                .addOnFailureListener(e ->
+                        Log.e("UserRepository", "❌ Greška pri ažuriranju coins: " + e.getMessage()));
+    }
 
     public void logoutUser() {
         auth.signOut();

@@ -1,64 +1,142 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:padding="24dp"
-    tools:context=".ui.HomeActivity">
+    android:background="@drawable/background"
+    android:padding="24dp">
 
-    <TextView
-        android:id="@+id/tvLogout"
-        android:text="Odjavi se"
-        android:textColor="#BB86FC"
-        android:textStyle="bold"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="12dp"
-        android:textSize="16sp"
-        android:layout_height="20dp"
-        android:layout_width="100dp"/>
+    <!-- Tamni overlay radi kontrasta -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000" />
 
-    <TextView
-        android:id="@+id/tvWelcome"
-        android:layout_width="300dp"
-        android:layout_height="25dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:text="Dobrodošao u Habit RPG!"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        android:textStyle="bold" />
-
+    <!-- Glavni sadržaj -->
     <LinearLayout
-        android:id="@+id/menuContainer"
         android:orientation="vertical"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Avatar -->
+        <ImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:src="@drawable/avatar1"
+            android:background="@drawable/avatar_ring"
+            android:padding="5dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Username i titula -->
+        <TextView
+            android:id="@+id/tvUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Igrač"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Novajlija"
+            android:textColor="#E3DAFF"
+            android:textSize="18sp"
+            android:layout_marginBottom="10dp" />
+
+        <!-- XP progress bar -->
+        <ProgressBar
+            android:id="@+id/progressXp"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="260dp"
+            android:layout_height="26dp"
+            android:progressDrawable="@drawable/level_progress"
+            android:max="100"
+            android:progress="0"
+            android:layout_marginBottom="12dp" />
+
+
+        <TextView
+            android:id="@+id/tvLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lvl 1"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tvXp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 / 200 XP"
+            android:textColor="#E0E0E0"
+            android:textSize="14sp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvPp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PP: 0"
+            android:textColor="#B3C6FF"
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Dugmići -->
         <Button
             android:id="@+id/btnTasks"
-            android:text="Zadaci"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="🎯 Zadaci"
+            android:backgroundTint="#B9A6E4"
+            android:textColor="#000"
+            android:layout_marginBottom="12dp" />
 
         <Button
             android:id="@+id/btnProfile"
-            android:text="Profil"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:text="👤 Profil"
+            android:backgroundTint="#B9A6E4"
+            android:textColor="#000"
+            android:layout_marginBottom="12dp" />
 
         <Button
             android:id="@+id/btnStats"
-            android:text="Statistika"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
-    </LinearLayout>
+            android:text="📊 Statistika"
+            android:backgroundTint="#B9B0F2"
+            android:textColor="#000"
+            android:layout_marginBottom="12dp" />
+        <Button
+            android:id="@+id/btnStore"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="🏪 Prodavnica"
+            android:backgroundTint="#B9A6E4"
+            android:textColor="#000"
+            android:layout_marginBottom="12dp" />
+        <Button
+            android:id="@+id/btnInventory"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="🔧Inventar"
+            android:backgroundTint="#B9A6E4"
+            android:textColor="#000"
+            android:layout_marginBottom="12dp" />
 
+        <TextView
+            android:id="@+id/tvLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Odjavi se"
+            android:textColor="#DDDDDD"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp" />
+    </LinearLayout>
 </RelativeLayout>

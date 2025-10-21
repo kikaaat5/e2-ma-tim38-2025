@@ -21,6 +21,7 @@ import com.example.mobileapplication.data.dao.TaskDao;
 import com.example.mobileapplication.databinding.ActivityCreateTaskBinding;
 import com.example.mobileapplication.data.models.TaskModels;
 import com.example.mobileapplication.ui.viewModel.CreateTaskViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,6 +37,8 @@ private TaskDao dao;
     private long selectedCategoryId = -1L;
 
     private long editId = -1;
+    private static FirebaseAuth auth = FirebaseAuth.getInstance();
+    private static String userId = auth.getCurrentUser().getUid();
 
 
     public static final String EXTRA_TASK_ID = "EXTRA_TASK_ID";
@@ -86,7 +89,7 @@ private TaskDao dao;
         this.editId = getIntent().getLongExtra(EXTRA_TASK_ID, -1);
         if (editId != -1) {
 
-            AppDatabase.get(this).taskDao().byId(editId).observe(this, t -> {
+            AppDatabase.get(this).taskDao().byId(editId,userId).observe(this, t -> {
                 if (t == null) return;
 
                 b.etTitle.setText(t.title);
