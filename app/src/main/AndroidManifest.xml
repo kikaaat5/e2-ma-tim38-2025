@@ -25,6 +25,7 @@
         <activity android:name=".ui.equipment.StoreActivity" android:exported="true"/>
         <activity android:name=".ui.equipment.EquipmentInventoryActivity" android:exported="true"/>
         <activity android:name=".ui.friends.FriendsActivity" android:exported="true"/>
+        <activity android:name=".ui.friends.AllianceActivity" android:exported="true"/>
         <receiver android:name=".domain.serviceImpl.AllianceInviteReceiver" />
 
         <activity android:name=".ui.auth.LoginActivity" android:exported="true">

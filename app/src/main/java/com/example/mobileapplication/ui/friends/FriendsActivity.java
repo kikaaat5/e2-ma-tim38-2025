@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobileapplication.R;
 import com.example.mobileapplication.ui.profile.ProfileActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,5 +100,49 @@ public class FriendsActivity extends AppCompatActivity {
 
         // 🔹 Kad stignu rezultati pretrage, osveži adapter
         searchResults.observe(this, list -> adapter.update(list));
+
+        findViewById(R.id.btnCreateAlliance).setOnClickListener(v -> showCreateAllianceDialog());
+
+        findViewById(R.id.btnViewAlliance).setOnClickListener(v -> {
+            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            FirebaseFirestore.getInstance()
+                    .collection("alliances")
+                    .whereArrayContains("members", uid)
+                    .get()
+                    .addOnSuccessListener(qs -> {
+                        if (qs.isEmpty()) {
+                            Toast.makeText(this, "Nisi član nijednog saveza ⚔️", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // ✅ Otvori prikaz saveza
+                            Intent intent = new Intent(this, com.example.mobileapplication.ui.friends.AllianceActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Greška pri proveri saveza", Toast.LENGTH_SHORT).show();
+                    });
+        });
+
+    }
+
+    private void showCreateAllianceDialog() {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setTitle("Novi savez");
+
+        final EditText input = new EditText(this);
+        input.setHint("Unesi naziv saveza");
+        builder.setView(input);
+
+        builder.setPositiveButton("Kreiraj", (dialog, which) -> {
+            String name = input.getText().toString().trim();
+            if (name.isEmpty()) return;
+
+            String leaderUid = vm.getCurrentUserUid();
+            vm.createAlliance(name, leaderUid);
+        });
+
+        builder.setNegativeButton("Otkaži", null);
+        builder.show();
     }
 }

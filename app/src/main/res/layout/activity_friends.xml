@@ -26,6 +26,22 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginTop="8dp"/>
+        <Button
+            android:id="@+id/btnCreateAlliance"
+            android:text="⚔️ Kreiraj savez"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"/>
+        <Button
+            android:id="@+id/btnViewAlliance"
+            android:text="⚔️ Prikaži savez"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#BB86FC"
+            android:textColor="#FFFFFF"/>
+
     </LinearLayout>
+
 
 </LinearLayout>

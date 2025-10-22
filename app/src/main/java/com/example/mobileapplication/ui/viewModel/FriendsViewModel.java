@@ -12,7 +12,9 @@ import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FriendsViewModel extends ViewModel {
     private final FriendsRepository repo = new FriendsRepository();
@@ -56,5 +58,51 @@ public class FriendsViewModel extends ViewModel {
 
     public void searchUsers(String query, MutableLiveData<List<DocumentSnapshot>> results) {
         repo.searchUsers(query).addOnSuccessListener(qs -> results.setValue(qs.getDocuments()));
+    }
+
+    public String getCurrentUserUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
+    public void createAlliance(String name, String leaderUid) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Map<String, Object> alliance = new HashMap<>();
+        alliance.put("name", name);
+        alliance.put("leaderUid", leaderUid);
+        alliance.put("members", List.of(leaderUid));
+        alliance.put("missionStarted", false);
+
+        db.collection("alliances").add(alliance).addOnSuccessListener(docRef -> {
+            // 🔹 kad se kreira savez, pozovi prijatelje
+            sendInvitesToFriends(name, leaderUid, docRef.getId());
+        });
+    }
+
+    private void sendInvitesToFriends(String allianceName, String senderUid, String allianceId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        List<String> friendIds = friendIdsLiveValue(); // uzmi prijatelje iz LiveData
+
+        if (friendIds == null || friendIds.isEmpty()) return;
+
+        for (String fid : friendIds) {
+            Map<String, Object> invite = new HashMap<>();
+            invite.put("senderUid", senderUid);
+            invite.put("allianceName", allianceName);
+            invite.put("allianceId", allianceId);
+            invite.put("status", "pending");
+
+            db.collection("notifications")
+                    .document(fid)
+                    .collection("invites")
+                    .document(allianceId)
+                    .set(invite);
+        }
+    }
+
+    // helper
+    private List<String> friendIdsLiveValue() {
+        return friendIds.getValue() != null ? new ArrayList<>(friendIds.getValue()) : new ArrayList<>();
     }
 }

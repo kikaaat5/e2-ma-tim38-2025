@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -24,6 +25,8 @@ import com.example.mobileapplication.ui.profile.StatisticsActivity;
 import com.example.mobileapplication.ui.tasks.TaskListActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HomeActivity extends AppCompatActivity {
@@ -93,6 +96,29 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         loadUserData();
+        String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseFirestore.getInstance()
+                .collection("notifications")
+                .document(currentUid)
+                .collection("invites")
+                .whereEqualTo("status", "pending")
+                .addSnapshotListener((qs, e) -> {
+                    if (qs == null) return;
+                    for (DocumentSnapshot doc : qs.getDocuments()) {
+                        String allianceName = doc.getString("allianceName");
+                        String senderUid = doc.getString("senderUid");
+
+                        new AlertDialog.Builder(this)
+                                .setTitle("Poziv u savez")
+                                .setMessage("Pozvani ste u savez: " + allianceName)
+                                .setPositiveButton("Prihvati", (d, w) -> acceptAllianceInvite(doc.getId()))
+                                .setNegativeButton("Odbij", (d, w) -> rejectAllianceInvite(doc.getId()))
+                                .setCancelable(false)
+                                .show();
+                    }
+                });
+
     }
 
     private void loadUserData() {
@@ -131,4 +157,27 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void acceptAllianceInvite(String allianceId) {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("alliances").document(allianceId)
+                .update("members", FieldValue.arrayUnion(uid));
+
+        db.collection("notifications").document(uid)
+                .collection("invites").document(allianceId)
+                .update("status", "accepted");
+    }
+
+    private void rejectAllianceInvite(String allianceId) {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore.getInstance()
+                .collection("notifications").document(uid)
+                .collection("invites").document(allianceId)
+                .update("status", "rejected");
+    }
+
+
+
 }
