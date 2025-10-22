@@ -1,14 +1,54 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="20dp" android:orientation="vertical"
-    android:layout_width="match_parent" android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/imgChest"
-        android:src="@drawable/chest_closed"
-        android:layout_width="200dp" android:layout_height="200dp"
-        android:layout_gravity="center"/>
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tvReward"
-        android:textSize="16sp"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" />
-</LinearLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/resultOverlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp"
+    android:background="#99000000">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="@android:color/white">
+
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieChest"
+                android:layout_width="260dp"
+                android:layout_height="260dp"
+                android:layout_gravity="center_horizontal"
+
+                app:lottie_rawRes="@raw/chest_closed"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvReward"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#222222"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="8dp"
+                 />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOpenChest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</FrameLayout>

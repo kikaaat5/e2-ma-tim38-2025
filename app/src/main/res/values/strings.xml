@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Mobile Application</string>
+    <string name="boss_bg">Boss background</string>
+    <string name="boss_image">Boss</string>
+    <string name="pp_0">PP: 0</string>
+    <string name="hp_0_0">HP: 0 / 0</string>
+    <string name="tries_5_5">Pokušaji: 5/5</string>
+    <string name="chance_0">Šansa: 0%</string>
+    <string name="attack">Napad</string>
+    <string name="coin">Novčići</string>
+    <string name="gear_clothes">Oprema (odeća)</string>
+    <string name="weapon">Oprema</string>
+    <string name="cat">Kategorije</string>
+    <string name="fight">Borba</string>
+
+
+
 </resources>

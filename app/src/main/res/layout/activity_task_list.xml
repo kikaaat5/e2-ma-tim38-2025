@@ -40,12 +40,13 @@
         android:layout_margin="16dp"
         android:layout_gravity="bottom|end"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/fabCat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="Kategorije"
-        app:srcCompat="@android:drawable/ic_menu_manage"
+        android:text="@string/cat"
+
         app:layout_anchorGravity="bottom|start"
         android:layout_margin="16dp"
         android:layout_gravity="bottom|start"/>
@@ -60,15 +61,15 @@
         app:layout_anchorGravity="top|end"
         app:srcCompat="@drawable/baseline_calendar_today_24" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/fabBossTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:contentDescription="@string/app_name"
+        android:text="@string/fight"
         app:layout_anchorGravity="bottom|center"
-        android:layout_gravity="bottom|center"
-        app:srcCompat="@drawable/coin" />  <!-- ili @drawable/ic_play_arrow ako nemaš ikonicu -->
+        android:layout_gravity="bottom|center" />  <!-- ili @drawable/ic_play_arrow ako nemaš ikonicu -->
 
 
 

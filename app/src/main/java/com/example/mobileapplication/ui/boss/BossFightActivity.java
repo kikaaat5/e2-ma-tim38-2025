@@ -1,16 +1,23 @@
 package com.example.mobileapplication.ui.boss;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.*;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.mobileapplication.R;
 import com.example.mobileapplication.data.AppDatabase;
 import com.example.mobileapplication.data.dao.TaskDao;
 import com.example.mobileapplication.data.repository.BossRepository;
+import com.example.mobileapplication.ui.equipment.EquipmentInventoryActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
@@ -26,6 +33,11 @@ public class BossFightActivity extends AppCompatActivity implements SensorEventL
     private MaterialTextView tvHp, tvPp, tvTries, tvChance;
     private MaterialButton btnAttack;
 
+    private MaterialButton btnEquipment;
+
+
+    private ImageView imgBoss;
+
     private int bossIndex;
     private long bossHpMax, bossHpLeft;
     private int userPP;
@@ -37,6 +49,9 @@ public class BossFightActivity extends AppCompatActivity implements SensorEventL
     private Sensor accel;
     private long lastShakeTs = 0;
     private final Random rnd = new Random();
+
+
+
 
     public static void start(AppCompatActivity a, long stageStart, long stageEnd){
         Intent i = new Intent(a, BossFightActivity.class);
@@ -57,6 +72,11 @@ public class BossFightActivity extends AppCompatActivity implements SensorEventL
         tvTries = findViewById(R.id.tvTries);
         tvChance= findViewById(R.id.tvChance);
         btnAttack = findViewById(R.id.btnAttack);
+        imgBoss = findViewById(R.id.imgBoss);
+        btnEquipment = findViewById(R.id.btnEquipment);
+
+
+
 
         //BossRepository.forceReset(this);
 
@@ -88,9 +108,14 @@ public class BossFightActivity extends AppCompatActivity implements SensorEventL
         tvTries.setText("Pokušaji: " + triesLeft + "/5");
         btnAttack.setOnClickListener(v -> performAttack());
 
+        btnEquipment.setOnClickListener(v ->
+                startActivity(new Intent(this, EquipmentInventoryActivity.class)));
+
         sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accel = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
+
+
 
     private void performAttack() {
         if (triesLeft <= 0 || bossHpLeft <= 0) return;
@@ -99,12 +124,15 @@ public class BossFightActivity extends AppCompatActivity implements SensorEventL
 
         boolean hit = rnd.nextInt(100) < successPct;
         if (hit) {
+
+                imgBoss.setColorFilter(0x55FF0000);
+                imgBoss.postDelayed(() -> imgBoss.clearColorFilter(), 120);
+
+
             bossHpLeft = Math.max(0, bossHpLeft - userPP);
             hpBar.setProgress((int) bossHpLeft);
             tvHp.setText("HP: " + bossHpLeft + " / " + bossHpMax);
-            // TODO: promijeni sliku na "hit", pa vrati na "idle"
         } else {
-            // TODO: feedback za promašaj
         }
         if (bossHpLeft == 0 || triesLeft == 0) finishBattle();
     }
@@ -156,9 +184,12 @@ public class BossFightActivity extends AppCompatActivity implements SensorEventL
         tvPp.setText("PP: " + updated);
 
         BossRepository.addCoins(this, coinsWon);
-        ResultChestDialog dialog = ResultChestDialog.newInstance(coinsWon, gearType);
-        dialog.show(getSupportFragmentManager(), "chest");
+        ResultChestDialog.newInstance(coinsWon, gearType)
+                .show(getSupportFragmentManager(), "chest");
+
     }
+
+
 
     @Override public void onSensorChanged(SensorEvent e) {
         if (e.sensor.getType() != Sensor.TYPE_ACCELEROMETER) return;

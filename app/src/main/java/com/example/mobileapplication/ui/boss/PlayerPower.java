@@ -16,7 +16,7 @@ public final class PlayerPower {
     }
     public static int currentPP(Context c){
         // TODO: kasnije saberi PP iz opreme + bazni PP.
-        return prefs(c).getInt(KEY_PP, 30);
+        return prefs(c).getInt(KEY_PP, 50);
     }
 
     public static void setPP(Context c, int value){

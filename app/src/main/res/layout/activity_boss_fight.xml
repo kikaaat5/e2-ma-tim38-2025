@@ -1,126 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:padding="16dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Pozadina -->
+
+    <!-- Horizontalna linija na 80% VISINE ekrana -->
+    <ImageView
+        android:id="@+id/imgBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/boss_bg"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background_fight"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide80"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <!-- Lik bossa: između vrha i guide80 = zauzima ~80% visine -->
     <ImageView
         android:id="@+id/imgBoss"
-        android:src="@drawable/boss_idle_1"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:scaleType="centerInside"/>
+        android:layout_width="332dp"
+        android:layout_height="442dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/boss_image"
+        android:scaleType="fitCenter"
+        android:src="@drawable/boss_image"
+        app:layout_constraintBottom_toTopOf="@id/guide80"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tvChance"
-        android:text="Šansa: 0%"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"/>
+    <!-- Donji kontrolni blok: od guide80 do dna (~20% visine) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/controls"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintTop_toBottomOf="@id/guide80"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/hpBar"
-        style="@style/Widget.Material3.LinearProgressIndicator"
-        android:layout_width="match_parent"
-        android:layout_height="12dp"
-        app:indicatorColor="@android:color/holo_red_dark"
-        app:trackColor="@android:color/darker_gray"
-        android:layout_marginTop="8dp"/>
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tvHp"
-        android:text="HP"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/ppBar"
-        style="@style/Widget.Material3.LinearProgressIndicator"
-        android:layout_width="match_parent"
-        android:layout_height="12dp"
-        app:indicatorColor="@android:color/holo_blue_light"
-        app:trackColor="@android:color/darker_gray"
-        android:layout_marginTop="8dp"/>
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tvPp"
-        android:text="PP"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <!-- activity_battle.xml -->
-    <LinearLayout
-        android:id="@+id/rewardBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="12dp"
-        android:layout_marginTop="12dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/imgCoin"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            app:srcCompat="@drawable/coin"/>
-
-        <TextView
-            android:id="@+id/tvCoins"
+        <!-- vertikalni razdelnik za lijevo/desno -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineMid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:text="0"/>
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"/>
 
-        <Space
+        <!-- PP lijevo -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvPp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pp_0"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/ppBar"/>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/ppBar"
             android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"/>
+            android:layout_height="10dp"
+            app:indicatorColor="@android:color/holo_blue_light"
+            app:trackColor="#3342A5F5"
+            app:trackThickness="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guidelineMid"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-            android:id="@+id/imgGear"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            app:srcCompat="@drawable/gear_clothes"/>
-
-        <TextView
-            android:id="@+id/tvGear"
+        <!-- HP desno -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvHp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:text="—"/>
-    </LinearLayout>
+            android:text="@string/hp_0_0"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/hpBar"/>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/hpBar"
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            app:indicatorColor="@android:color/holo_red_light"
+            app:trackColor="#33F44336"
+            app:trackThickness="10dp"
+            app:layout_constraintStart_toStartOf="@id/guidelineMid"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <!-- Donji red: ikonice + tekst + dugme -->
+        <LinearLayout
+            android:id="@+id/rowBottom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/hpBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/imgCoin"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/coin"
+                android:contentDescription="@string/coin"/>
+
+            <Space android:layout_width="6dp" android:layout_height="0dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEquipment"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="@string/weapon"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp" />
 
 
-    <LinearLayout
-        android:id="@+id/layGear"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
-        <!-- ikonice opreme (ImageView) – popuni dinamički -->
-    </LinearLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tvTries"
-        android:text="Pokušaji: 5/5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAttack"
-        android:text="NAPADNI"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"/>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tvHint"
-        android:text="Protresi telefon za napad (shake)"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"/>
-</LinearLayout>
+            <Space android:layout_width="10dp" android:layout_height="0dp"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvTries"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tries_5_5"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <Space android:layout_width="9dp" android:layout_height="0dp"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvChance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chance_0"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="14sp"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAttack"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="92dp"
+                android:layout_height="wrap_content"
+                app:icon="@android:drawable/ic_media_play"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
