@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.mobileapplication.data.models.EquipmentEntity;
 
@@ -20,8 +21,8 @@ public interface EquipmentDao {
     @Query("SELECT * FROM equipment WHERE userId = :uid AND isActive = 1")
     LiveData<List<EquipmentEntity>> getActive(String uid);
 
-    @Query("UPDATE equipment SET isActive = 1, battlesLeft = :battles WHERE id = :id AND userId = :uid")
-    void activate(long id, String uid, int battles);
+    @Query("UPDATE equipment SET isActive = 1 WHERE id = :id AND userId = :uid")
+    void activate(long id, String uid);
 
     @Query("UPDATE equipment SET battlesLeft = battlesLeft - 1 WHERE userId = :uid AND isActive = 1 AND battlesLeft > 0")
     void consumeBattle(String uid);
@@ -29,11 +30,19 @@ public interface EquipmentDao {
     @Query("DELETE FROM equipment WHERE userId = :uid AND battlesLeft <= 0 AND isActive = 1")
     void cleanupExpired(String uid);
 
+    @Query("SELECT * FROM equipment WHERE userId = :uid ORDER BY isActive DESC, battlesLeft DESC")
+    List<EquipmentEntity> getAllForDebug(String uid);
+
+    @Query("SELECT * FROM equipment WHERE type = :name AND userId = :uid LIMIT 1")
+    EquipmentEntity getByNameSync(String name, String uid);
+
     @Query("SELECT * FROM equipment WHERE id = :id AND userId = :uid LIMIT 1")
     EquipmentEntity getByIdSync(long id, String uid);
     @Query("SELECT * FROM equipment WHERE userId = :uid")
     LiveData<List<EquipmentEntity>> getByUser(String uid);
 
+    @Update
+    void update(EquipmentEntity item);
 
 
 }

@@ -8,7 +8,7 @@
 
     <ImageView
         android:id="@+id/imgBoss"
-        android:src="@drawable/boss_idle_1"
+        android:src="@drawable/boss2"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:scaleType="centerInside"/>

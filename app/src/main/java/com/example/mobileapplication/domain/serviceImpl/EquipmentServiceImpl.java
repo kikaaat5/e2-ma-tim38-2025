@@ -59,13 +59,11 @@ public class EquipmentServiceImpl {
             DocumentSnapshot doc = task.getResult();
             int currentCoins = doc.contains("coins") ? doc.getLong("coins").intValue() : 0;
 
-            // 🔹 1️⃣ Ako korisnik nema dovoljno novca — odmah izađi
             if (currentCoins < item.price) {
                 showToast("Nemaš dovoljno novčića 💰");
-                return; // 🚫 ništa dalje se ne izvršava
+                return;
             }
 
-            // 🔹 2️⃣ Ima dovoljno — sad kupujemo
             int newCoins = currentCoins - item.price;
             userRepo.updateUserCoins(uid, newCoins);
 
@@ -73,13 +71,29 @@ public class EquipmentServiceImpl {
             item.isActive = false;
             item.battlesLeft = Math.max(item.battlesLeft, 0);
 
-            repo.insert(item);
-            repo.syncToFirestore(item);
+            AppDatabase.exec(() -> {
+                EquipmentEntity existing = repo.getByNameSync(item.name);
 
-            // 🔹 3️⃣ Potvrda — kupljeno
-            showToast("Kupljeno: " + item.name + " ✅");
+                if (existing != null) {
+                    existing.value += item.value;
+                    if (existing.battlesLeft > 0 && item.battlesLeft > 0) {
+                        existing.battlesLeft += item.battlesLeft;
+                    }
+                    repo.update(existing);
+                    Log.d("EquipmentRepo", "🪄 Item već postoji → sabrani postotci i trajanje ažurirano.");
+                } else {
+                    repo.insert(item);
+                    repo.syncToFirestore(item);
+                    Log.d("EquipmentRepo", "🆕 Kupljen novi item: " + item.name +"stari je"+existing.name);
+                }
+
+                new Handler(Looper.getMainLooper()).post(() ->
+                        showToast("Kupljeno: " + item.name + " ✅")
+                );
+            });
         });
     }
+
 
     private void showToast(String msg) {
         // Sve poruke idu kroz ovaj helper – na glavnom threadu, uvek u tačnom redosledu
@@ -87,10 +101,8 @@ public class EquipmentServiceImpl {
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show());
     }
 
-
-
-
     public void activateItem(long id, int battles) {
+
         repo.activateItem(id, battles);
     }
 

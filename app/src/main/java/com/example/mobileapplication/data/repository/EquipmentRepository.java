@@ -37,6 +37,11 @@ public class EquipmentRepository {
         return equipmentDao.getActive(uid);
     }
 
+    public EquipmentEntity getByNameSync(String name) {
+        String uid = getUid();
+        return equipmentDao.getByNameSync(name, uid);
+    }
+
     // 🔹 Kupovina itema iz prodavnice
     public void buyItem(EquipmentEntity item) {
         String uid = getUid();
@@ -48,7 +53,7 @@ public class EquipmentRepository {
 
             // sinhronizacija sa Firebase
             syncToFirestore(item);
-            Log.d("EquipmentRepo", "✅ Kupljen predmet: " + item.name);
+            Log.d("EquipmentDebug", "✅ Kupljen predmet: " + item.name);
         });
     }
 
@@ -56,16 +61,18 @@ public class EquipmentRepository {
     public void activateItem(long id, int battles) {
         String uid = getUid();
         AppDatabase.exec(() -> {
-            equipmentDao.activate(id, uid, battles);
+            equipmentDao.activate(id, uid);
 
             EquipmentEntity item = equipmentDao.getByIdSync(id, uid);
             if (item != null) {
                 item.isActive = true;
-                item.battlesLeft = battles;
+                Log.d("EquipmentDebug", "🟢 Aktiviran predmet AKAKAKAK ID=" + id +item.type + " za " + item.battlesLeft + " borbi");
                 syncToFirestore(item);
+
             }
-            Log.d("EquipmentRepo", "🟢 Aktiviran predmet ID=" + id + " za " + battles + " borbi");
+            Log.d("EquipmentDebug", "🟢 Aktiviran predmet ID=" + id + " za " + item.battlesLeft + " borbi");
         });
+
     }
 
     // 🔹 Smanji trajanje aktivne opreme nakon borbe
@@ -75,7 +82,15 @@ public class EquipmentRepository {
             equipmentDao.consumeBattle(uid);
             equipmentDao.cleanupExpired(uid);
         });
+
+        AppDatabase.exec(() -> {
+            List<EquipmentEntity> all = equipmentDao.getAllForDebug(uid);
+            for (EquipmentEntity e : all) {
+                Log.d("EquipmentDebug", e.name + " → active=" + e.isActive + ", left=" + e.battlesLeft);
+            }
+        });
     }
+
 
     // 🔹 Pomoćna metoda za sinhronizaciju sa Firebase
     public void syncToFirestore(EquipmentEntity e) {
@@ -113,6 +128,10 @@ public class EquipmentRepository {
 
     public long insert(EquipmentEntity e) {
         return equipmentDao.insert(e);
+    }
+
+    public void update(EquipmentEntity e){
+        equipmentDao.update(e);
     }
 
 

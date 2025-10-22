@@ -33,6 +33,7 @@ public class EquipmentViewModel extends AndroidViewModel {
     }
 
     public void activateItem(long id, int battles) {
+
         service.activateItem(id, battles);
     }
 

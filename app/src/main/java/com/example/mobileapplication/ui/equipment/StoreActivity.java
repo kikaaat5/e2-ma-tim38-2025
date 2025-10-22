@@ -49,10 +49,10 @@ public class StoreActivity extends AppCompatActivity {
                 "Jednokratno povećava PP za 20%", 0.20, 50, 1));
         list.add(makeItem("Napitak +40% snage (1 borba)", "POTION",
                 "Jednokratno povećava PP za 40%", 0.40, 70, 1));
-        list.add(makeItem("Napitak +5% snage (trajno)", "POTION",
-                "Trajno povećava PP za 5%", 0.05, 200, 0));
-        list.add(makeItem("Napitak +10% snage (trajno)", "POTION",
-                "Trajno povećava PP za 10%", 0.10, 1000, 0));
+        list.add(makeItem("Napitak +5% snage (trajno)", "WEAPON",
+                "Trajno povećava PP za 5%", 0.05, 200, 99999));
+        list.add(makeItem("Napitak +10% snage (trajno)", "WEAPON",
+                "Trajno povećava PP za 10%", 0.10, 1000, 99999));
 
         // 🔹 Odeća
         list.add(makeItem("Rukavice snage +10%", "ARMOR",
@@ -64,9 +64,9 @@ public class StoreActivity extends AppCompatActivity {
 
         // 🔹 Oružje
         list.add(makeItem("Mač +5% snage", "WEAPON",
-                "Trajno povećava snagu za 5%", 0.05, 300, 0));
+                "Trajno povećava snagu za 5%", 0.05, 300, 99999));
         list.add(makeItem("Luk i strela +5% novčića", "WEAPON",
-                "Trajno povećava dobijeni novac za 5%", 0.05, 300, 0));
+                "Trajno povećava dobijeni novac za 5%", 0.05, 300, 9999999));
 
         return list;
     }
@@ -81,7 +81,9 @@ public class StoreActivity extends AppCompatActivity {
         e.price = price;
         e.duration = duration;
         e.isActive = false;
-        e.battlesLeft = 0;
+        if ("POTION".equalsIgnoreCase(type)) e.battlesLeft = 1;
+        else if ("ARMOR".equalsIgnoreCase(type)) e.battlesLeft = 2;
+        else if ("WEAPON".equalsIgnoreCase(type)) e.battlesLeft = 9999;
         return e;
     }
 }

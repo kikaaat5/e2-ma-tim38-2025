@@ -44,7 +44,7 @@ public class EquipmentActivity extends AppCompatActivity {
             return;
         }
 
-        int battles = item.duration > 0 ? item.duration : 0;
+        int battles = item.battlesLeft;
         vm.activateItem(item.id, battles);
         Toast.makeText(this, "Aktivirana oprema: " + item.name, Toast.LENGTH_SHORT).show();
     }

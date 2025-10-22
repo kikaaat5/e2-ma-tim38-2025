@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" >
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".MobileApplication"
@@ -8,6 +9,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileApplication" >
+
 
 
         <activity android:name=".ui.tasks.CreateTaskActivity" android:exported="true" />
@@ -22,6 +24,9 @@
         <activity android:name=".ui.boss.BossFightActivity" android:exported="true" />
         <activity android:name=".ui.equipment.StoreActivity" android:exported="true"/>
         <activity android:name=".ui.equipment.EquipmentInventoryActivity" android:exported="true"/>
+        <activity android:name=".ui.friends.FriendsActivity" android:exported="true"/>
+        <receiver android:name=".domain.serviceImpl.AllianceInviteReceiver" />
+
         <activity android:name=".ui.auth.LoginActivity" android:exported="true">
            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

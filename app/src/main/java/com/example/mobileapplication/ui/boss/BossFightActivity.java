@@ -6,11 +6,13 @@ import android.hardware.*;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileapplication.R;
 import com.example.mobileapplication.data.AppDatabase;
 import com.example.mobileapplication.data.dao.TaskDao;
 import com.example.mobileapplication.data.repository.BossRepository;
+import com.example.mobileapplication.ui.viewModel.EquipmentViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
@@ -49,6 +51,9 @@ public class BossFightActivity extends AppCompatActivity implements SensorEventL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boss_fight);
         setTitle("Borba sa bosom");
+
+        EquipmentViewModel equipmentVM = new ViewModelProvider(this).get(EquipmentViewModel.class);
+        equipmentVM.consumeBattle();
 
         hpBar   = findViewById(R.id.hpBar);
         ppBar   = findViewById(R.id.ppBar);
@@ -124,6 +129,7 @@ public class BossFightActivity extends AppCompatActivity implements SensorEventL
 
             int oldPP = PlayerPower.currentPP(this);
             int newPP = PlayerPower.applyWinRule(this);
+            BossRepository.setHpLeft(this, bossHpLeft);
 
             android.widget.Toast.makeText(
                     this,

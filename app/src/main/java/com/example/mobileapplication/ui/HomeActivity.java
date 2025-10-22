@@ -1,6 +1,8 @@
 package com.example.mobileapplication.ui;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -8,12 +10,15 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.mobileapplication.R;
 import com.example.mobileapplication.data.models.User;
+import com.example.mobileapplication.domain.serviceImpl.NotificationService;
 import com.example.mobileapplication.ui.auth.LoginActivity;
 import com.example.mobileapplication.ui.equipment.EquipmentInventoryActivity;
 import com.example.mobileapplication.ui.equipment.StoreActivity;
+import com.example.mobileapplication.ui.friends.FriendsActivity;
 import com.example.mobileapplication.ui.profile.ProfileActivity;
 import com.example.mobileapplication.ui.profile.StatisticsActivity;
 import com.example.mobileapplication.ui.tasks.TaskListActivity;
@@ -24,7 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class HomeActivity extends AppCompatActivity {
 
     private ImageView ivAvatar;
-    private TextView tvUsername, tvTitle, tvLevel, tvXp, tvPp, tvLogout, tvStore, tvEquipment;
+    private TextView tvUsername, tvTitle, tvLevel, tvXp, tvPp, tvLogout, tvStore, tvEquipment,tvFriends;
     private ProgressBar progressXp;
 
     private FirebaseAuth auth;
@@ -35,8 +40,22 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        NotificationService notifService = new NotificationService(this);
+        notifService.listenForAllianceInvites();
+
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        101
+                );
+            }
+        }
 
         ivAvatar = findViewById(R.id.ivAvatar);
         tvUsername = findViewById(R.id.tvUsername);
@@ -48,6 +67,8 @@ public class HomeActivity extends AppCompatActivity {
         tvLogout = findViewById(R.id.tvLogout);
         tvStore = findViewById(R.id.btnStore);
         tvEquipment = findViewById(R.id.btnInventory);
+        tvFriends = findViewById(R.id.btnFriends);
+
 
         findViewById(R.id.btnTasks).setOnClickListener(v ->
                 startActivity(new Intent(this, TaskListActivity.class)));
@@ -59,6 +80,8 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(this, StoreActivity.class)));
         findViewById(R.id.btnInventory).setOnClickListener(v ->
                 startActivity(new Intent(this, EquipmentInventoryActivity.class)));
+        findViewById(R.id.btnFriends).setOnClickListener(v ->
+                startActivity(new Intent(this, FriendsActivity.class)));
 
 
         tvLogout.setOnClickListener(v -> {

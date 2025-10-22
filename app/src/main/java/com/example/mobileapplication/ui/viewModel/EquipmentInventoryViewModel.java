@@ -31,7 +31,7 @@ public class EquipmentInventoryViewModel extends AndroidViewModel {
     public void activate(EquipmentEntity item) {
         int battles = 0;
         if ("POTION".equalsIgnoreCase(item.type)) battles = 1;
-        else if ("CLOTHES".equalsIgnoreCase(item.type)) battles = 2;
+        else if ("ARMOR".equalsIgnoreCase(item.type)) battles = 2;
         else if ("WEAPON".equalsIgnoreCase(item.type)) battles = 9999;
         repo.activateItem(item.id, battles);
     }
